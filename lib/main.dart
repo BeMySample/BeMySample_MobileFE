@@ -8,21 +8,18 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner:false,
-      title: 'My Project',
+      title: 'BeMySample App',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      initialRoute: '/',
+      initialRoute: '/', // Awal aplikasi buka SplashScreen
       routes: {
-        '/': (context) => SplashScreen(),
-        '/login': (context) => LoginPage(), // Route ke Login Page
-        '/home': (context) => HomePage(), // Route ke Home Page
+        '/': (context) => SplashScreen(), // Route ke SplashScreen
+        '/login': (context) => LoginPage(), // Route ke LoginPage
+        '/home': (context) => const HomePage(), // Route ke HomePage
       },
     );
   }

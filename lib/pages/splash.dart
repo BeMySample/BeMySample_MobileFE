@@ -32,7 +32,7 @@ class _SplashScreenState extends State<SplashScreen> {
             SizedBox(height: 35),
             Text(
               'BeMySample: Realibility at Reach',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
           ],
         ),
