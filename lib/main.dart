@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ngoding_project/pages/login.dart';
 import 'package:ngoding_project/pages/splash.dart';
 import 'package:ngoding_project/pages/home.dart'; // Import Home Page
 
@@ -7,10 +8,12 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
+      debugShowCheckedModeBanner:false,
       title: 'My Project',
       theme: ThemeData(
         primarySwatch: Colors.blue,
@@ -18,7 +21,8 @@ class MyApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         '/': (context) => SplashScreen(),
-        '/home': (context) => HomePage(), // Route ke HomePage
+        '/login': (context) => LoginPage(), // Route ke Login Page
+        '/home': (context) => HomePage(), // Route ke Home Page
       },
     );
   }
