@@ -24,7 +24,7 @@ class HomePage extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             const Text(
-              'HEHE to BeMySample!',
+              'Welcome to BeMySample!',
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 24,
