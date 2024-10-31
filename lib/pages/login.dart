@@ -36,11 +36,11 @@ class LoginPage extends StatelessWidget {
                   Center(
                     child: Image.asset(
                       'lib/assets/images/BeMySamplePNG.png',
-                      width: 200,
-                      height: 200,
+                      width: 220,
+                      height: 220,
                     ),
                   ),
-                  SizedBox(height: 10),
+                  SizedBox(height: 15),
                   // Judul
                   Text(
                     'Selamat datang kembali!',
