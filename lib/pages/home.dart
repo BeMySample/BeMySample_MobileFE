@@ -88,11 +88,11 @@ class HomePage extends StatelessWidget {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 12),
-            _buildSurveyCard("Preferensi Digitalisasi Pemilihan Umum", "190 responden", "38.000 dari 190.000", Colors.blue),
+            _buildSurveyCard("Preferensi Digitalisasi Pemilihan Umum", "190 responden", "38.000 dari 190.000", Colors.blue, "Dibuka"),
             const SizedBox(height: 8),
-            _buildSurveyCard("Strategi Menabung Efektif bagi Sandwich Generation", "1 responden", "Terpakai 200 dari 200", Colors.red),
+            _buildSurveyCard("Strategi Menabung Efektif bagi Sandwich Generation", "1 responden", "Terpakai 200 dari 200", Colors.red, "Terhenti"),
             const SizedBox(height: 8),
-            _buildSurveyCard("Apakah Anda Siap Beralih ke Mobil Listrik?", "190 responden", "Belum Dialokasikan", Colors.grey),
+            _buildSurveyCard("Apakah Anda Siap Beralih ke Mobil Listrik?", "190 responden", "Belum Dialokasikan", Colors.grey, "Draft"),
             const SizedBox(height: 24),
 
             // Bagian "Berkontribusi"
@@ -118,7 +118,7 @@ class HomePage extends StatelessWidget {
               color: Colors.grey[200],
               child: ListTile(
                 title: Text(
-                  'Eksplor lebih banyak survei...',
+                  'Eksplor lebih banyak survei ...',
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
                 trailing: Icon(Icons.arrow_forward),
@@ -133,13 +133,32 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Widget _buildSurveyCard(String title, String responses, String status, Color color) {
+  Widget _buildSurveyCard(String title, String responses, String status, Color color, String label) {
     return Card(
       child: ListTile(
         leading: Container(
-          width: 10,
+          width: 40,
           height: double.infinity,
-          color: color,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                width: 10,
+                height: 40,
+                color: color,
+              ),
+              const SizedBox(height: 4),
+              Flexible(
+                child: Text(
+                  label,
+                  style: TextStyle(fontSize: 9, color: Colors.black54),
+                  textAlign: TextAlign.center,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ],
+          ),
         ),
         title: Text(title),
         subtitle: Column(
