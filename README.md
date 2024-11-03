@@ -1,6 +1,5 @@
 # kau datang tak kuduga beri aku tawa bahagia hariku kau buat sempurna
-
-A new Flutter project.
+![patrick](https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExYmg3MnB1aHJ3NzdwazR5YzhjbWZ4OTljOXRhd21mNjhvd3FwMHMxNyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/l41Ym49ppcDP6iY3C/giphy.gif)
 
 ## Getting Started
 
