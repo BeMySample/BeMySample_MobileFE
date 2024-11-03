@@ -88,11 +88,11 @@ class HomePage extends StatelessWidget {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 12),
-            _buildSurveyCard("Preferensi Digitalisasi Pemilihan Umum", "190 responden", "38.000 dari 190.000", Colors.blue, "Dibuka"),
+            _buildSurveyCard("Preferensi Digitalisasi Pemilihan Umum", "190 responden", "Terpakai 38.000 dari 190.000", Colors.blue, "DIBUKA"),
             const SizedBox(height: 8),
-            _buildSurveyCard("Strategi Menabung Efektif bagi Sandwich Generation", "1 responden", "Terpakai 200 dari 200", Colors.red, "Terhenti"),
+            _buildSurveyCard("Strategi Menabung Efektif bagi Sandwich Generation", "20 responden", "Terpakai 200 dari 200", Colors.red, "TERHENTI"),
             const SizedBox(height: 8),
-            _buildSurveyCard("Apakah Anda Siap Beralih ke Mobil Listrik?", "190 responden", "Belum Dialokasikan", Colors.grey, "Draft"),
+            _buildSurveyCard("Apakah Anda Siap Beralih ke Mobil Listrik?", "190 responden", "Belum Teralokasikan", Colors.grey, "DRAFT"),
             const SizedBox(height: 24),
 
             // Bagian "Berkontribusi"
@@ -116,7 +116,7 @@ class HomePage extends StatelessWidget {
             // Tombol "Eksplor Lebih Banyak Survei"
             Card(
               color: Colors.grey[200],
-              child: ListTile(
+              child: ListTile(  
                 title: Text(
                   'Eksplor lebih banyak survei ...',
                   style: TextStyle(fontWeight: FontWeight.bold),
@@ -135,62 +135,118 @@ class HomePage extends StatelessWidget {
 
   Widget _buildSurveyCard(String title, String responses, String status, Color color, String label) {
     return Card(
-      child: ListTile(
-        leading: Container(
-          width: 40,
-          height: double.infinity,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                width: 10,
-                height: 40,
-                color: color,
+      child: Row(
+        children: [
+          Container(
+            width: 50,
+            height: 140,
+            decoration: BoxDecoration(
+              color: color,
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(10),
+                bottomLeft: Radius.circular(10),
               ),
-              const SizedBox(height: 4),
-              Flexible(
-                child: Text(
-                  label,
-                  style: TextStyle(fontSize: 9, color: Colors.black54),
-                  textAlign: TextAlign.center,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                RotatedBox(
+                  quarterTurns: 3,
+                  child: Text(
+                    label,
+                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12),
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
-        title: Text(title),
-        subtitle: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(responses),
-            Text(status, style: TextStyle(color: Colors.red)),
-          ],
-        ),
-        trailing: Icon(Icons.more_vert),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 8),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Icon(Icons.person, size: 14, color: Colors.grey[600]),
+                          const SizedBox(width: 4),
+                          Text(responses, style: TextStyle(color: Colors.grey[600], fontSize: 12)),
+                        ],
+                      ),
+                      const SizedBox(height: 4),
+                      Row(
+                        children: [
+                          Icon(Icons.update, size: 14, color: Colors.grey[600]),
+                          const SizedBox(width: 4),
+                          Text("Diperbarui 10 Oktober 2024", style: TextStyle(color: Colors.grey[600], fontSize: 12)),
+                        ],
+                      ),
+                      const SizedBox(height: 4),
+                      Row(
+                        children: [
+                          Icon(Icons.pie_chart_outline, size: 14, color: Colors.grey[600]),
+                          const SizedBox(width: 4),
+                          Text(status, style: TextStyle(color: Colors.red, fontSize: 12)),
+                        ],
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+          IconButton(
+            icon: Icon(Icons.more_vert),
+            onPressed: () {},
+          ),
+        ],
       ),
     );
   }
 
   Widget _buildContributionCard(String title, int points, String imagePath) {
     return Card(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
+      ),
       child: Container(
         width: 160,
-        padding: const EdgeInsets.all(8.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Image.asset(
-              imagePath,
-              height: 80,
-              width: double.infinity,
-              fit: BoxFit.cover,
+            ClipRRect(
+              borderRadius: BorderRadius.vertical(top: Radius.circular(8)),
+              child: Image.asset(
+                imagePath,
+                height: 100, // Sesuaikan tinggi gambar agar memenuhi bagian atas card
+                width: double.infinity,
+                fit: BoxFit.cover,
+              ),
             ),
-            const SizedBox(height: 8),
-            Text(title, maxLines: 2, overflow: TextOverflow.ellipsis),
-            const SizedBox(height: 4),
-            Text("Dapatkan $points", style: TextStyle(color: Colors.blue)),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    maxLines: null, // Tidak ada batas maksimal baris
+                  ),
+                  const SizedBox(height: 4),
+                  Text("Dapatkan $points", style: TextStyle(color: Colors.blue)),
+                ],
+              ),
+            ),
           ],
         ),
       ),
