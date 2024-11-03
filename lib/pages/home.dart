@@ -7,14 +7,57 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('BeMySample'),
-        centerTitle: true,
         backgroundColor: Colors.white,
         elevation: 1,
+        title: Row(
+          children: [
+            Image.asset(
+              'lib/assets/icons/BeMySampleIcon.png', // Path ke logo
+              width: 32, // Sesuaikan ukuran logo
+              height: 32,
+            ),
+            const SizedBox(width: 8),
+            const Text(
+              'BeMySample',
+              style: TextStyle(
+                color: Color.fromRGBO(30, 56, 219, 1),
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
+        centerTitle: true,
         actions: [
-          IconButton(
-            icon: Icon(Icons.account_circle, color: Colors.grey[800]),
-            onPressed: () {},
+          Row(
+            children: [
+              Image.asset(
+                'lib/assets/icons/iconscoin.png', // Path ke ikon koin
+                width: 18,
+                height: 18,
+              ),
+              const SizedBox(width: 4),
+              const Text(
+                '200.000',
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  color: Color.fromARGB(255, 80, 80, 80),
+                ),
+              ),
+              const SizedBox(width: 8), // Jarak antara koin dan ikon profil
+              Padding(
+                padding: const EdgeInsets.only(right: 16.0), // Jarak kanan dari tepi
+                child: ClipOval(
+                  child: Image.asset(
+                    'lib/assets/images/FotoEky.png', // Path ke foto profil
+                    width: 32, // Sesuaikan ukuran ikon profil
+                    height: 32,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+            ],
           ),
         ],
       ),
@@ -23,24 +66,6 @@ class HomePage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Bagian Koin yang Dimiliki
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(Icons.attach_money, color: Colors.amber, size: 28),
-                const SizedBox(width: 8),
-                Text(
-                  '200.000 Koin',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.grey[800],
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 24),
-
             // Section atas dengan dua tombol utama
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -51,6 +76,9 @@ class HomePage extends StatelessWidget {
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 20),
                       backgroundColor: Colors.blue[100],
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8), // Ubah tingkat rounded di sini
+                      ),
                     ),
                     child: Column(
                       children: [
@@ -68,10 +96,18 @@ class HomePage extends StatelessWidget {
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 20),
                       backgroundColor: Colors.blue[300],
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8), // Ubah tingkat rounded di sini
+                      ),
                     ),
                     child: Column(
                       children: [
-                        Icon(Icons.star, color: Colors.white, size: 28),
+                        Image.asset(
+                          'lib/assets/icons/staricon.png', // Path ke ikon bintang custom
+                          width: 28,
+                          height: 28,
+                          color: Colors.white, // Sesuaikan warna ikon
+                        ),
                         SizedBox(height: 8),
                         Text("Buat dengan AI", style: TextStyle(color: Colors.white)),
                       ],
@@ -116,7 +152,7 @@ class HomePage extends StatelessWidget {
             // Tombol "Eksplor Lebih Banyak Survei"
             Card(
               color: Colors.grey[200],
-              child: ListTile(  
+              child: ListTile(
                 title: Text(
                   'Eksplor lebih banyak survei ...',
                   style: TextStyle(fontWeight: FontWeight.bold),
@@ -139,7 +175,7 @@ class HomePage extends StatelessWidget {
         children: [
           Container(
             width: 50,
-            height: 140,
+            height: 148,
             decoration: BoxDecoration(
               color: color,
               borderRadius: BorderRadius.only(
@@ -178,7 +214,12 @@ class HomePage extends StatelessWidget {
                     children: [
                       Row(
                         children: [
-                          Icon(Icons.person, size: 14, color: Colors.grey[600]),
+                          Image.asset(
+                            'lib/assets/icons/person.png', // Path ke ikon yang diinginkan
+                            width: 12,
+                            height: 12,
+                            color: Colors.grey[600],
+                          ),
                           const SizedBox(width: 4),
                           Text(responses, style: TextStyle(color: Colors.grey[600], fontSize: 12)),
                         ],
@@ -186,7 +227,12 @@ class HomePage extends StatelessWidget {
                       const SizedBox(height: 4),
                       Row(
                         children: [
-                          Icon(Icons.update, size: 14, color: Colors.grey[600]),
+                          Image.asset(
+                            'lib/assets/icons/clock.png', // Path ke ikon yang diinginkan
+                            width: 12,
+                            height: 12,
+                            color: Colors.grey[600],
+                          ),
                           const SizedBox(width: 4),
                           Text("Diperbarui 10 Oktober 2024", style: TextStyle(color: Colors.grey[600], fontSize: 12)),
                         ],
@@ -194,7 +240,12 @@ class HomePage extends StatelessWidget {
                       const SizedBox(height: 4),
                       Row(
                         children: [
-                          Icon(Icons.pie_chart_outline, size: 14, color: Colors.grey[600]),
+                          Image.asset(
+                            'lib/assets/icons/iconscoin.png', // Path ke ikon yang diinginkan
+                            width: 12,
+                            height: 12,
+                            color: Colors.grey[600],
+                          ),
                           const SizedBox(width: 4),
                           Text(status, style: TextStyle(color: Colors.red, fontSize: 12)),
                         ],
@@ -220,7 +271,7 @@ class HomePage extends StatelessWidget {
         borderRadius: BorderRadius.circular(8),
       ),
       child: Container(
-        width: 160,
+        width: 163,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -243,7 +294,18 @@ class HomePage extends StatelessWidget {
                     maxLines: null, // Tidak ada batas maksimal baris
                   ),
                   const SizedBox(height: 4),
-                  Text("Dapatkan $points", style: TextStyle(color: Colors.blue)),
+                  Row(
+                    children: [
+                      Image.asset(
+                        'lib/assets/icons/iconscoin.png', // Path ke ikon koin
+                        width: 12,
+                        height: 12,
+                        color: Colors.blue, // Sesuaikan warna ikon
+                      ),
+                      const SizedBox(width: 4),
+                      Text("Dapatkan $points", style: TextStyle(color: Colors.blue)),
+                    ],
+                  ),
                 ],
               ),
             ),
