@@ -72,7 +72,9 @@ class HomePage extends StatelessWidget {
               children: [
                 Expanded(
                   child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () { 
+                    Navigator.pushNamed(context, '/editsurvey');
+                    },
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 20),
                       backgroundColor: Colors.blue[100],

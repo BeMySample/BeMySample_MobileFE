@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:ngoding_project/pages/login.dart';
 import 'package:ngoding_project/pages/splash.dart';
-import 'package:ngoding_project/pages/home.dart'; // Import Home Page
+import 'package:ngoding_project/pages/home.dart';
+import 'package:ngoding_project/pages/editsurvey.dart';
 
 void main() {
   runApp(MyApp());
@@ -19,7 +20,8 @@ class MyApp extends StatelessWidget {
       routes: {
         '/': (context) => SplashScreen(), // Route ke SplashScreen
         '/login': (context) => LoginPage(), // Route ke LoginPage
-        '/home': (context) => const HomePage(), // Route ke HomePage
+        '/home': (context) => HomePage(), // Route ke HomePage
+        '/editsurvey': (context) => SurveyPage(), // Route ke SurveyPage
       },
     );
   }
