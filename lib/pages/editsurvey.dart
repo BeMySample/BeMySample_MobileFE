@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:ngoding_project/pages/home.dart'; // Impor HomePage
-import 'package:flutter_colorpicker/flutter_colorpicker.dart'; // Impor package color picker
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:iconify_flutter/iconify_flutter.dart';
+import 'package:iconify_flutter/icons/material_symbols.dart';// Impor package color picker
 
 class SurveyPage extends StatefulWidget {
   @override
@@ -60,7 +62,7 @@ class _SurveyPageState extends State<SurveyPage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Pick a color!'),
+          title: const Text('Pilih Warna'),
           content: SingleChildScrollView(
             child: ColorPicker(
               pickerColor: initialColor,
@@ -69,7 +71,7 @@ class _SurveyPageState extends State<SurveyPage> {
           ),
           actions: <Widget>[
             ElevatedButton(
-              child: const Text('Got it'),
+              child: const Text('Lanjutkan'),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -103,10 +105,22 @@ class _SurveyPageState extends State<SurveyPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: _backgroundColor, // Update this to reflect the chosen color
+        backgroundColor: Colors.transparent, // Update this to reflect the chosen color
         elevation: 0,
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Color(0xFF2073DB), Color(0xFF1F38DB)],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+          ),
+        ),
         leading: IconButton(
-          icon: Icon(Icons.home, color: Colors.black),
+          icon: Iconify(
+            MaterialSymbols.home_outline, 
+            color: Colors.white,
+            ),
           onPressed: () {
             Navigator.pushAndRemoveUntil(
               context,
@@ -117,21 +131,25 @@ class _SurveyPageState extends State<SurveyPage> {
         ),
         actions: [
           IconButton(
-            icon: Icon(Icons.more_horiz, color: Colors.black),
+            icon: Icon(Icons.more_horiz, color: Colors.white),
             onPressed: () {
               // Logika untuk tombol titik tiga
             },
           ),
           IconButton(
-            icon: Icon(Icons.play_arrow, color: Colors.black),
+            icon: Icon(Icons.play_arrow_outlined, color: Colors.white),
             onPressed: () {
               // Logika untuk tombol play
             },
           ),
           IconButton(
-            icon: Icon(Icons.upload, color: Colors.black),
+            icon: Iconify(
+            MaterialSymbols.upload, // Menggunakan ikon dari Iconify
+            color: Colors.white,    // Warna ikon
+            size: 24,               // Ukuran ikon
+            ),
             onPressed: () {
-              // Logika untuk tombol upload
+            // Logika untuk tombol upload
             },
           ),
         ],

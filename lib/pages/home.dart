@@ -35,7 +35,7 @@ class HomePage extends StatelessWidget {
           Row(
             children: [
               Image.asset(
-                'lib/assets/icons/iconscoin.png', // Path ke ikon koin
+                'lib/assets/icons/akarcoins.png', // Path ke ikon koin
                 width: 18,
                 height: 18,
               ),
@@ -180,13 +180,19 @@ class HomePage extends StatelessWidget {
 
             // Tombol "Eksplor Lebih Banyak Survei"
             Card(
-              color: Colors.grey[200],
+              color: Colors.blue[300],
               child: ListTile(
                 title: Text(
                   'Eksplor lebih banyak survei ...',
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                 style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                 ),
                 ),
-                trailing: Icon(Icons.arrow_forward),
+                trailing: Icon(
+                  Icons.arrow_forward,
+                  color: Colors.white,
+                  ),
                 onTap: () {
                   // Aksi saat tombol diklik, bisa navigasi ke halaman survei lainnya
                 },
@@ -274,13 +280,12 @@ class HomePage extends StatelessWidget {
                       ),
                       const SizedBox(height: 4),
                       Row(
-                        children: [
-                          Image.asset(
-                            'lib/assets/icons/iconscoin.png', // Path ke ikon yang diinginkan
-                            width: 12,
-                            height: 12,
-                            color: Colors.grey[600],
-                          ),
+                       children: [
+                        Image.asset(
+                        'lib/assets/icons/akarcoins.png',
+                        width: 16,
+                        height: 16,
+                        ),
                           const SizedBox(width: 4),
                           Text(status,
                               style:
@@ -335,7 +340,7 @@ class HomePage extends StatelessWidget {
                   Row(
                     children: [
                       Image.asset(
-                        'lib/assets/icons/iconscoin.png', // Path ke ikon koin
+                        'lib/assets/icons/akarcoins.png', // Path ke ikon koin
                         width: 12,
                         height: 12,
                         color: Colors.blue, // Sesuaikan warna ikon
