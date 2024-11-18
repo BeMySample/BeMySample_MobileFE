@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:ngoding_project/pages/home.dart'; // Impor HomePage
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
-import 'package:iconify_flutter/icons/material_symbols.dart';// Impor package color picker
+import 'package:iconify_flutter/icons/material_symbols.dart'; // Impor package color picker
+import 'package:image_picker/image_picker.dart'; // Impor package image picker
+import 'dart:io'; // Impor package dart:io untuk File
 
 class SurveyPage extends StatefulWidget {
   @override
@@ -20,12 +22,17 @@ class _SurveyPageState extends State<SurveyPage> {
   TextEditingController _backgroundColorController = TextEditingController();
   TextEditingController _buttonColorController = TextEditingController();
   TextEditingController _textColorController = TextEditingController();
+  TextEditingController _buttonTextColorController = TextEditingController();
+  TextEditingController _transparencyController = TextEditingController();
 
   Color _backgroundColor = Colors.white; // Warna latar
   Color _buttonColor = Colors.red; // Warna tombol
   Color _textColor = Colors.black; // Warna teks
+  Color _buttonTextColor = Colors.white; // Warna teks tombol
+  double _backgroundTransparency = 0.5; // Transparansi latar
+  File? _backgroundImage; // Gambar latar
 
-  TextEditingController _transparencyController = TextEditingController();
+  final ImagePicker _picker = ImagePicker();
 
   void _onItemTapped(int index) {
     setState(() {
@@ -82,6 +89,14 @@ class _SurveyPageState extends State<SurveyPage> {
     );
   }
 
+  Future<void> _pickImage() async {
+    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      setState(() {
+        _backgroundImage = File(pickedFile.path);
+      });
+    }
+  }
 
   @override
   void initState() {
@@ -89,8 +104,9 @@ class _SurveyPageState extends State<SurveyPage> {
     _backgroundColorController.text = '#${_backgroundColor.value.toRadixString(16).substring(2).toUpperCase()}';
     _buttonColorController.text = '#${_buttonColor.value.toRadixString(16).substring(2).toUpperCase()}';
     _textColorController.text = '#${_textColor.value.toRadixString(16).substring(2).toUpperCase()}';
+    _buttonTextColorController.text = '#${_buttonTextColor.value.toRadixString(16).substring(2).toUpperCase()}';
+    _transparencyController.text = '50'; // Default transparansi 50%
   }
-
 
   @override
   void dispose() {
@@ -98,7 +114,353 @@ class _SurveyPageState extends State<SurveyPage> {
     _backgroundColorController.dispose();
     _buttonColorController.dispose();
     _textColorController.dispose();
+    _buttonTextColorController.dispose();
     super.dispose();
+  }
+
+  Widget _buildPopupContent() {
+    if (_selectedIndex == 0) {
+      return Column(
+        children: [
+          Text('Item'),
+          // Contoh box untuk mengatur page
+          TextField(
+            decoration: InputDecoration(
+              labelText: 'Nama Page',
+              border: OutlineInputBorder(),
+            ),
+          ),
+          const SizedBox(height: 8),
+          TextField(
+            decoration: InputDecoration(
+              labelText: 'Deskripsi Page',
+              border: OutlineInputBorder(),
+            ),
+          ),
+        ],
+      );
+    } else if (_selectedIndex == 1) {
+      return Column(
+        children: [
+          DropdownButtonFormField<String>(
+            value: _selectedIsi,
+            decoration: InputDecoration(
+              labelText: 'Isi',
+              border: OutlineInputBorder(),
+            ),
+            items: [
+              DropdownMenuItem(
+                value: 'Pembuka',
+                child: Row(
+                  children: [
+                    Icon(Icons.rocket_launch, color: Colors.blue),
+                    SizedBox(width: 8),
+                    Text('Pembuka'),
+                  ],
+                ),
+              ),
+              DropdownMenuItem(
+                value: 'Teks Pendek',
+                child: Row(
+                  children: [
+                    Icon(Icons.short_text, color: Colors.purple),
+                    SizedBox(width: 8),
+                    Text('Teks Pendek'),
+                  ],
+                ),
+              ),
+              DropdownMenuItem(
+                value: 'Teks Panjang',
+                child: Row(
+                  children: [
+                    Icon(Icons.notes, color: Colors.purple),
+                    SizedBox(width: 8),
+                    Text('Teks Panjang'),
+                  ],
+                ),
+              ),
+              DropdownMenuItem(
+                value: 'Pilihan Ganda',
+                child: Row(
+                  children: [
+                    Icon(Icons.radio_button_checked, color: Colors.purple),
+                    SizedBox(width: 8),
+                    Text('Pilihan Ganda'),
+                  ],
+                ),
+              ),
+              DropdownMenuItem(
+                value: 'Dropdown',
+                child: Row(
+                  children: [
+                    Icon(Icons.arrow_drop_down_circle, color: Colors.purple),
+                    SizedBox(width: 8),
+                    Text('Dropdown'),
+                  ],
+                ),
+              ),
+              DropdownMenuItem(
+                value: 'Waktu',
+                child: Row(
+                  children: [
+                    Icon(Icons.calendar_today, color: Colors.purple),
+                    SizedBox(width: 8),
+                    Text('Waktu'),
+                  ],
+                ),
+              ),
+              DropdownMenuItem(
+                value: 'Quote',
+                child: Row(
+                  children: [
+                    Icon(Icons.format_quote, color: Colors.purple),
+                    SizedBox(width: 8),
+                    Text('Quote'),
+                  ],
+                ),
+              ),
+              DropdownMenuItem(
+                value: 'Likert',
+                child: Row(
+                  children: [
+                    Icon(Icons.star, color: Colors.purple),
+                    SizedBox(width: 8),
+                    Text('Likert'),
+                  ],
+                ),
+              ),
+              DropdownMenuItem(
+                value: 'Penutup',
+                child: Row(
+                  children: [
+                    Icon(Icons.rocket, color: Colors.blue),
+                    SizedBox(width: 8),
+                    Text('Penutup'),
+                  ],
+                ),
+              ),
+            ],
+            onChanged: (value) {
+              _updateTombolText(value);
+            },
+          ),
+          const SizedBox(height: 16),
+          TextFormField(
+            key: ValueKey(_tombolText), // Memaksa rebuild jika teks berubah
+            initialValue: _tombolText,
+            readOnly: true,
+            decoration: InputDecoration(
+              labelText: 'Tombol',
+              border: OutlineInputBorder(),
+            ),
+          ),
+        ],
+      );
+} else {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      GestureDetector(
+        onTap: _pickImage, // Fungsi akan dipicu saat seluruh box diklik
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(8), // Membuat sudut melengkung
+            border: Border.all(color: Colors.grey[800]!, width: 1), // Border dark grey
+            color: Colors.transparent, // Latar belakang
+          ),
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16), // Padding untuk isi dalam box
+          margin: const EdgeInsets.only(bottom: 8), // Memberi jarak antar elemen
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Latar', // Konten teks statis
+                style: TextStyle(fontSize: 16, color: Colors.black),
+              ),
+              Icon(Icons.upload, color: Colors.blue), // Ikon upload
+            ],
+          ),
+        ),
+      ),
+      const SizedBox(height: 8),
+        Container(
+  decoration: BoxDecoration(
+    borderRadius: BorderRadius.circular(8), // Membuat sudut melengkung
+    border: Border.all(color: const Color.fromARGB(255, 104, 104, 104)!, width: 1), // Border agar serupa dengan TextField
+    color: Colors.transparent, // Latar belakang
+  ),
+  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5), // Padding untuk isi dalam box
+  margin: const EdgeInsets.only(bottom: 10), // Memberi jarak bawah antar elemen
+  child: Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      const Text(
+        'Transparansi Latar',
+        style: TextStyle(fontSize: 16),
+      ),
+      Slider(
+        value: _backgroundTransparency,
+        min: 0.0,
+        max: 1.0,
+        divisions: 100,
+        activeColor: const Color.fromARGB(255, 0, 18, 211)!,
+        label: '${(_backgroundTransparency * 100).round()}%', // Menampilkan nilai sebagai persen
+        onChanged: (value) {
+          setState(() {
+            _backgroundTransparency = value; // Memperbarui transparansi
+          });
+        },
+      ),
+    ],
+  ),
+),
+          const SizedBox(height: 8),
+          Row(
+            children: [
+              Expanded(
+                child: TextField(
+                  readOnly: true,
+                  decoration: InputDecoration(
+                    labelText: 'Warna Latar',
+                    prefixIcon: Container(
+                      margin: EdgeInsets.symmetric(horizontal: 8.0),
+                      width: 24,
+                      height: 24,
+                      decoration: BoxDecoration(
+                        color: _backgroundColor,
+                        shape: BoxShape.circle,
+                        border: Border.all(color: Colors.black),
+                      ),
+                    ),
+                    border: OutlineInputBorder(),
+                  ),
+                  controller: _backgroundColorController,
+                ),
+              ),
+              IconButton(
+                icon: Icon(Icons.color_lens),
+                onPressed: () {
+                  _showColorPickerDialog(_backgroundColor, (Color color) {
+                    setState(() {
+                      _backgroundColor = color;
+                      _backgroundColorController.text = '#${_backgroundColor.value.toRadixString(16).substring(2).toUpperCase()}';
+                    });
+                  });
+                },
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Row(
+            children: [
+              Expanded(
+                child: TextField(
+                  readOnly: true,
+                  decoration: InputDecoration(
+                    labelText: 'Warna Tombol',
+                    prefixIcon: Container(
+                      margin: EdgeInsets.symmetric(horizontal: 8.0),
+                      width: 24,
+                      height: 24,
+                      decoration: BoxDecoration(
+                        color: _buttonColor,
+                        shape: BoxShape.circle,
+                        border: Border.all(color: Colors.black),
+                      ),
+                    ),
+                    border: OutlineInputBorder(),
+                  ),
+                  controller: _buttonColorController,
+                ),
+              ),
+              IconButton(
+                icon: Icon(Icons.color_lens),
+                onPressed: () {
+                  _showColorPickerDialog(_buttonColor, (Color color) {
+                    setState(() {
+                      _buttonColor = color;
+                      _buttonColorController.text = '#${_buttonColor.value.toRadixString(16).substring(2).toUpperCase()}';
+                    });
+                  });
+                },
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Row(
+            children: [
+              Expanded(
+                child: TextField(
+                  readOnly: true,
+                  decoration: InputDecoration(
+                    labelText: 'Warna Teks',
+                    prefixIcon: Container(
+                      margin: EdgeInsets.symmetric(horizontal: 8.0),
+                      width: 24,
+                      height: 24,
+                      decoration: BoxDecoration(
+                        color: _textColor,
+                        shape: BoxShape.circle,
+                        border: Border.all(color: Colors.black),
+                      ),
+                    ),
+                    border: OutlineInputBorder(),
+                  ),
+                  controller: _textColorController,
+                ),
+              ),
+              IconButton(
+                icon: Icon(Icons.color_lens),
+                onPressed: () {
+                  _showColorPickerDialog(_textColor, (Color color) {
+                    setState(() {
+                      _textColor = color;
+                      _textColorController.text = '#${_textColor.value.toRadixString(16).substring(2).toUpperCase()}';
+                    });
+                  });
+                },
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Row(
+            children: [
+              Expanded(
+                child: TextField(
+                  readOnly: true,
+                  decoration: InputDecoration(
+                    labelText: 'Warna Teks Tombol',
+                    prefixIcon: Container(
+                      margin: EdgeInsets.symmetric(horizontal: 8.0),
+                      width: 24,
+                      height: 24,
+                      decoration: BoxDecoration(
+                        color: _buttonTextColor,
+                        shape: BoxShape.circle,
+                        border: Border.all(color: Colors.black),
+                      ),
+                    ),
+                    border: OutlineInputBorder(),
+                  ),
+                  controller: _buttonTextColorController,
+                ),
+              ),
+              IconButton(
+                icon: Icon(Icons.color_lens),
+                onPressed: () {
+                  _showColorPickerDialog(_buttonTextColor, (Color color) {
+                    setState(() {
+                      _buttonTextColor = color;
+                      _buttonTextColorController.text = '#${_buttonTextColor.value.toRadixString(16).substring(2).toUpperCase()}';
+                    });
+                  });
+                },
+              ),
+            ],
+          ),
+        ],
+      );
+    }
   }
 
   @override
@@ -162,31 +524,40 @@ class _SurveyPageState extends State<SurveyPage> {
             margin: const EdgeInsets.symmetric(horizontal: 25, vertical: 35),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(16),
-              image: DecorationImage(
-                image: AssetImage('lib/assets/images/Perkuliahan.png'),
-                fit: BoxFit.cover,
-              ),
+              image: _backgroundImage != null
+                  ? DecorationImage(
+                      image: FileImage(_backgroundImage!),
+                      fit: BoxFit.cover,
+                    )
+                  : DecorationImage(
+                      image: AssetImage('lib/assets/images/Perkuliahan.png'),
+                      fit: BoxFit.cover,
+                    ),
             ),
             child: Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(16),
-                color: _backgroundColor.withOpacity(0.6),
+                color: _backgroundColor.withOpacity(_backgroundTransparency),
               ),
               child: Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text(
+                    Text(
                       'Selamat datang',
                       style: TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
+                        color: _textColor, // Warna teks dinamis
                       ),
                     ),
                     const SizedBox(height: 8),
-                    const Text(
+                    Text(
                       'Mari mengisi survei ini!',
-                      style: TextStyle(fontSize: 16),
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: _textColor, // Warna teks dinamis
+                      ),
                     ),
                     const SizedBox(height: 20),
                     ElevatedButton(
@@ -200,10 +571,10 @@ class _SurveyPageState extends State<SurveyPage> {
                           horizontal: 32.0,
                         ),
                       ),
-                      child: const Text(
+                      child: Text(
                         'Mulai',
                         style: TextStyle(
-                          color: Colors.white,
+                          color: _buttonTextColor, // Warna teks tombol dinamis
                           fontSize: 18,
                         ),
                       ),
@@ -213,330 +584,77 @@ class _SurveyPageState extends State<SurveyPage> {
               ),
             ),
           ),
-          AnimatedSlide(
-            offset: Offset(0, _popupOffset),
-            duration: Duration(milliseconds: 300),
-            child: _isPopupVisible
-                ? GestureDetector(
-                    onTap: _closePopup,
-                    child: Container(
-                      color: Colors.transparent,
-                      child: Align(
-                        alignment: Alignment.bottomCenter,
-                        child: GestureDetector(
-                          onVerticalDragUpdate: (details) {
-                            if (details.primaryDelta! > 7) {
-                              _closePopup();
-                            }
-                          },
-                          child: Container(
-                            height: MediaQuery.of(context).size.height / 3.3,
-                            decoration: BoxDecoration(
-                              color: Color(0xFFF0F0F0),
-                              borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-                            ),
-                            child: SingleChildScrollView(
-                              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Center(
-                                    child: Container(
-                                      height: 3,
-                                      width: 40,
-                                      color: Colors.grey[400],
-                                      margin: const EdgeInsets.only(top: 8, bottom: 16),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(16.0),
-                                    child: Text(
-                                      _selectedIndex == 0 ? 'Konten' : 'Desain',
-                                      style: const TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                  if (_selectedIndex == 0)
-                                    Column(
-                                      children: [
-                                        DropdownButtonFormField<String>(
-                                          value: _selectedIsi,
-                                          decoration: InputDecoration(
-                                            labelText: 'Isi',
-                                            border: OutlineInputBorder(),
-                                          ),
-                                          items: [
-                                            DropdownMenuItem(
-                                              value: 'Pembuka',
-                                              child: Row(
-                                                children: [
-                                                  Icon(Icons.rocket_launch, color: Colors.blue),
-                                                  SizedBox(width: 8),
-                                                  Text('Pembuka'),
-                                                ],
-                                              ),
-                                            ),
-                                            DropdownMenuItem(
-                                              value: 'Teks Pendek',
-                                              child: Row(
-                                                children: [
-                                                  Icon(Icons.short_text, color: Colors.purple),
-                                                  SizedBox(width: 8),
-                                                  Text('Teks Pendek'),
-                                                ],
-                                              ),
-                                            ),
-                                            DropdownMenuItem(
-                                              value: 'Teks Panjang',
-                                              child: Row(
-                                                children: [
-                                                  Icon(Icons.notes, color: Colors.purple),
-                                                  SizedBox(width: 8),
-                                                  Text('Teks Panjang'),
-                                                ],
-                                              ),
-                                            ),
-                                            DropdownMenuItem(
-                                              value: 'Pilihan Ganda',
-                                              child: Row(
-                                                children: [
-                                                  Icon(Icons.radio_button_checked, color: Colors.purple),
-                                                  SizedBox(width: 8),
-                                                  Text('Pilihan Ganda'),
-                                                ],
-                                              ),
-                                            ),
-                                            DropdownMenuItem(
-                                              value: 'Dropdown',
-                                              child: Row(
-                                                children: [
-                                                  Icon(Icons.arrow_drop_down_circle, color: Colors.purple),
-                                                  SizedBox(width: 8),
-                                                  Text('Dropdown'),
-                                                ],
-                                              ),
-                                            ),
-                                            DropdownMenuItem(
-                                              value: 'Waktu',
-                                              child: Row(
-                                                children: [
-                                                  Icon(Icons.calendar_today, color: Colors.purple),
-                                                  SizedBox(width: 8),
-                                                  Text('Waktu'),
-                                                ],
-                                              ),
-                                            ),
-                                            DropdownMenuItem(
-                                              value: 'Quote',
-                                              child: Row(
-                                                children: [
-                                                  Icon(Icons.format_quote, color: Colors.purple),
-                                                  SizedBox(width: 8),
-                                                  Text('Quote'),
-                                                ],
-                                              ),
-                                            ),
-                                            DropdownMenuItem(
-                                              value: 'Likert',
-                                              child: Row(
-                                                children: [
-                                                  Icon(Icons.star, color: Colors.purple),
-                                                  SizedBox(width: 8),
-                                                  Text('Likert'),
-                                                ],
-                                              ),
-                                            ),
-                                            DropdownMenuItem(
-                                              value: 'Penutup',
-                                              child: Row(
-                                                children: [
-                                                  Icon(Icons.rocket, color: Colors.blue),
-                                                  SizedBox(width: 8),
-                                                  Text('Penutup'),
-                                                ],
-                                              ),
-                                            ),
-                                          ],
-                                          onChanged: (value) {
-                                            _updateTombolText(value);
-                                          },
-                                        ),
-                                        const SizedBox(height: 16),
-                                        TextFormField(
-                                          key: ValueKey(_tombolText), // Memaksa rebuild jika teks berubah
-                                          initialValue: _tombolText,
-                                          readOnly: true,
-                                          decoration: InputDecoration(
-                                            labelText: 'Tombol',
-                                            border: OutlineInputBorder(),
-                                          ),
-                                        ),
-                                      ],
-                                    )
-                                  else
-                                    Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        TextField(
-                                          decoration: InputDecoration(
-                                            labelText: 'Latar',
-                                            suffixIcon: Icon(Icons.upload),
-                                            border: OutlineInputBorder(),
-                                          ),
-                                        ),
-                                        const SizedBox(height: 8),
-                                        TextField(
-                                          controller: _transparencyController,
-                                          keyboardType: TextInputType.number,
-                                          decoration: InputDecoration(
-                                            labelText: 'Trnsprsi. Latar',
-                                            suffixText: '%',
-                                            border: OutlineInputBorder(),
-                                          ),
-                                          onChanged: (value) {
-                                            if (value.isNotEmpty) {
-                                              int intValue = int.parse(value);
-                                              if (intValue < 1) {
-                                                _transparencyController.text = '1';
-                                              } else if (intValue > 100) {
-                                                _transparencyController.text = '100';
-                                              }
-                                              _transparencyController.selection = TextSelection.fromPosition(
-                                                TextPosition(offset: _transparencyController.text.length),
-                                              );
-                                            }
-                                          },
-                                        ),
-                                        const SizedBox(height: 8),
-                                        Row(
-                                          children: [
-                                            Expanded(
-                                              child: TextField(
-                                                readOnly: true,
-                                                decoration: InputDecoration(
-                                                  labelText: 'Warna Latar',
-                                                  prefixIcon: Container(
-                                                    margin: EdgeInsets.symmetric(horizontal: 8.0),
-                                                    width: 24,
-                                                    height: 24,
-                                                    decoration: BoxDecoration(
-                                                      color: _backgroundColor,
-                                                      shape: BoxShape.circle,
-                                                      border: Border.all(color: Colors.black),
-                                                    ),
-                                                  ),
-                                                  border: OutlineInputBorder(),
-                                                ),
-                                                controller: _backgroundColorController,
-                                              ),
-                                            ),
-                                            IconButton(
-                                              icon: Icon(Icons.color_lens),
-                                              onPressed: () {
-                                                _showColorPickerDialog(_backgroundColor, (Color color) {
-                                                  setState(() {
-                                                    _backgroundColor = color;
-                                                    _backgroundColorController.text = '#${_backgroundColor.value.toRadixString(16).substring(2).toUpperCase()}';
-                                                  });
-                                                });
-                                              },
-                                            ),
-                                          ],
-                                        ),
-
-
-                                        const SizedBox(height: 8),
-                                        Row(
-                                          children: [
-                                            Expanded(
-                                              child: TextField(
-                                                readOnly: true,
-                                                decoration: InputDecoration(
-                                                  labelText: 'Warna Tombol',
-                                                  prefixIcon: Container(
-                                                    margin: EdgeInsets.symmetric(horizontal: 8.0),
-                                                    width: 24,
-                                                    height: 24,
-                                                    decoration: BoxDecoration(
-                                                      color: _buttonColor,
-                                                      shape: BoxShape.circle,
-                                                      border: Border.all(color: Colors.black),
-                                                    ),
-                                                  ),
-                                                  border: OutlineInputBorder(),
-                                                ),
-                                                controller: _buttonColorController,
-                                              ),
-                                            ),
-                                            IconButton(
-                                              icon: Icon(Icons.color_lens),
-                                              onPressed: () {
-                                                _showColorPickerDialog(_buttonColor, (Color color) {
-                                                  setState(() {
-                                                    _buttonColor = color;
-                                                    _buttonColorController.text = '#${_buttonColor.value.toRadixString(16).substring(2).toUpperCase()}';
-                                                  });
-                                                });
-                                              },
-                                            ),
-                                          ],
-                                        ),
-
-                                        const SizedBox(height: 8),
-                                        Row(
-                                          children: [
-                                            Expanded(
-                                              child: TextField(
-                                                readOnly: true,
-                                                decoration: InputDecoration(
-                                                  labelText: 'Warna Teks',
-                                                  prefixIcon: Container(
-                                                    margin: EdgeInsets.symmetric(horizontal: 8.0),
-                                                    width: 24,
-                                                    height: 24,
-                                                    decoration: BoxDecoration(
-                                                      color: _textColor,
-                                                      shape: BoxShape.circle,
-                                                      border: Border.all(color: Colors.black),
-                                                    ),
-                                                  ),
-                                                  border: OutlineInputBorder(),
-                                                ),
-                                                controller: _textColorController,
-                                              ),
-                                            ),
-                                            IconButton(
-                                              icon: Icon(Icons.color_lens),
-                                              onPressed: () {
-                                                _showColorPickerDialog(_textColor, (Color color) {
-                                                  setState(() {
-                                                    _textColor = color;
-                                                    _textColorController.text = '#${_textColor.value.toRadixString(16).substring(2).toUpperCase()}';
-                                                  });
-                                                });
-                                              },
-                                            ),
-                                          ],
-                                        ),
-
-                                      ],
-                                    ),
-                                ],
-                              ),
-                            ),
+        AnimatedSlide(
+  offset: Offset(0, _popupOffset),
+  duration: Duration(milliseconds: 300),
+  child: _isPopupVisible
+      ? GestureDetector(
+          onTap: _closePopup,
+          child: Container(
+            color: Colors.transparent,
+            child: Align(
+              alignment: Alignment.bottomCenter,
+              child: GestureDetector(
+                onVerticalDragUpdate: (details) {
+                  if (details.primaryDelta! > 7) {
+                    _closePopup();
+                  }
+                },
+                child: Container(
+                  height: MediaQuery.of(context).size.height / 3.3,
+                  decoration: BoxDecoration(
+                    color: Color(0xFFF0F0F0),
+                    borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Header tetap di atas
+                      Container(
+                        padding: const EdgeInsets.all(13),
+                        decoration: BoxDecoration(
+                          border: Border(
+                            bottom: BorderSide(color: Colors.grey[300]!, width: 0.5),
+                          ),
+                        ),
+                        child: Center(
+                        child: Text(
+                          _selectedIndex == 0
+                              ? 'Item'
+                              : _selectedIndex == 1
+                                  ? 'Konten'
+                                  : 'Desain',
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
                       ),
                     ),
-                  )
-                : Container(),
+                      // Konten yang bisa di-scroll
+                      Expanded(
+                        child: SingleChildScrollView(
+                          padding: const EdgeInsets.all(16.0),
+                          child: _buildPopupContent(),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
           ),
+        )
+      : Container(),
+)
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+           icon: Icon(Icons.settings, color: Colors.grey), // "Item" button
+           label: 'Item',
+          ),
           BottomNavigationBarItem(
             icon: Icon(Icons.article, color: Colors.grey),
             label: 'Konten',
