@@ -12,6 +12,10 @@ class SurveyPage extends StatefulWidget {
 }
 
 class _SurveyPageState extends State<SurveyPage> {
+  int currentPage = 0;
+ List<Map<String, String>> pages = [
+  {'name': 'Selamat datang!', 'description': 'Mari mengisi survei ini!'}
+  ];
   int _selectedIndex = 0;
   bool _isPopupVisible = false;
   String? _selectedIsi; // Menyimpan nilai yang dipilih
@@ -119,26 +123,78 @@ class _SurveyPageState extends State<SurveyPage> {
   }
 
   Widget _buildPopupContent() {
-    if (_selectedIndex == 0) {
-      return Column(
+if (_selectedIndex == 0) {
+  return Stack(
+    children: [
+      // Konten utama tetap dengan Column
+      Column(
         children: [
-          Text('Item'),
-          // Contoh box untuk mengatur page
-          TextField(
-            decoration: InputDecoration(
-              labelText: 'Nama Page',
-              border: OutlineInputBorder(),
-            ),
+          // Header untuk navigasi page
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              IconButton(
+                icon: Icon(Icons.arrow_back),
+                onPressed: currentPage > 0
+                    ? () {
+                        setState(() {
+                          currentPage--;
+                        });
+                      }
+                    : null,
+              ),
+              Text('Page ${currentPage + 1} / ${pages.length}'),
+              IconButton(
+                icon: Icon(Icons.arrow_forward),
+                onPressed: currentPage < pages.length - 1
+                    ? () {
+                        setState(() {
+                          currentPage++;
+                        });
+                      }
+                    : null,
+              ),
+            ],
           ),
-          const SizedBox(height: 8),
-          TextField(
-            decoration: InputDecoration(
-              labelText: 'Deskripsi Page',
-              border: OutlineInputBorder(),
+          const SizedBox(height: 16),
+          // Form untuk mengedit nama page
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: TextField(
+              decoration: InputDecoration(
+                labelText: 'Nama Page',
+                border: OutlineInputBorder(),
+              ),
+              controller: TextEditingController(text: pages[currentPage]['name']),
+              onChanged: (value) {
+                setState(() {
+                  pages[currentPage]['name'] = value;
+                });
+              },
             ),
           ),
         ],
-      );
+      ),
+      // Tombol "Tambah" di pojok kanan bawah layar
+      Align(
+        alignment: Alignment.bottomRight,
+        child: Padding(
+          padding: const EdgeInsets.only(right: 16, bottom: 16), // Jarak yang fleksibel
+          child: FloatingActionButton.extended(
+            onPressed: () {
+              setState(() {
+                pages.add({'name': 'Page ${pages.length + 1}'}); // Tambahkan page baru
+                currentPage = pages.length - 1; // Pindah ke page baru
+              });
+            },
+            label: Text('Tambah'),
+            icon: Icon(Icons.add),
+            backgroundColor: Colors.purple,
+          ),
+        ),
+      ),
+    ],
+  );
     } else if (_selectedIndex == 1) {
       return Column(
         children: [
@@ -544,7 +600,7 @@ class _SurveyPageState extends State<SurveyPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      'Selamat datang',
+                      '${pages[currentPage]['name']}!',
                       style: TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,

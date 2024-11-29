@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatelessWidget {
+  const LoginPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -161,7 +163,7 @@ class SocialButton extends StatelessWidget {
   final Color color;
   final VoidCallback onPressed;
 
-  const SocialButton({
+  const SocialButton({super.key, 
     this.imagePath,
     this.icon,
     required this.text,
