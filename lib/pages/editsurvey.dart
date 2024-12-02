@@ -29,6 +29,7 @@ class _SurveyPageState extends State<SurveyPage> {
   TextEditingController _buttonTextColorController = TextEditingController();
   TextEditingController _transparencyController = TextEditingController();
   TextEditingController _pageNameController = TextEditingController();
+  TextEditingController _descriptionController = TextEditingController();
 
   Color _backgroundColor = Colors.white; // Warna latar
   Color _buttonColor = Colors.red; // Warna tombol
@@ -40,14 +41,18 @@ class _SurveyPageState extends State<SurveyPage> {
   final ImagePicker _picker = ImagePicker();
 
   void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-      _isPopupVisible = true;
-      _imageHeightFactor = 0.6; // Gambar mengecil ketika popup muncul
-      _popupOffset = 0.0; // Popup muncul dengan animasi slide-up
-       _pageNameController.text = pages[currentPage]['name'] ?? '';
-    });
-  }
+  setState(() {
+    _selectedIndex = index;
+    _isPopupVisible = true;
+    _imageHeightFactor = 0.6; // Gambar mengecil ketika popup muncul
+    _popupOffset = 0.0; // Popup muncul dengan animasi slide-up
+  });
+}
+
+void _updatePageNameController() {
+  _pageNameController.text = pages[currentPage]['name'] ?? '';
+    _descriptionController.text = pages[currentPage]['description'] ?? 'Mari mengisi survei ini!';
+}
 
   void _closePopup() {
     setState(() {
@@ -113,6 +118,8 @@ class _SurveyPageState extends State<SurveyPage> {
     _buttonTextColorController.text = '#${_buttonTextColor.value.toRadixString(16).substring(2).toUpperCase()}';
     _transparencyController.text = '50'; // Default transparansi 50%
     _pageNameController.text = pages[currentPage]['name'] ?? '';
+    _descriptionController.text = pages[currentPage]['description'] ?? 'Mari mengisi survei ini!';
+    _selectedIsi = 'Pembuka'; // Default pilihan isi
   }
 
   @override
@@ -142,6 +149,7 @@ if (_selectedIndex == 0) {
                     ? () {
                         setState(() {
                           currentPage--;
+                          _updatePageNameController();
                         });
                       }
                     : null,
@@ -153,6 +161,7 @@ if (_selectedIndex == 0) {
                     ? () {
                         setState(() {
                           currentPage++;
+                          _updatePageNameController();
                         });
                       }
                     : null,
@@ -161,41 +170,61 @@ if (_selectedIndex == 0) {
           ),
           const SizedBox(height: 16),
           // Form untuk mengedit nama page
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: TextField(
-              decoration: InputDecoration(
-                labelText: 'Nama Page',
-                border: OutlineInputBorder(),
-              ),
-              controller: _pageNameController,
-              onChanged: (value) {
-                setState(() {
-                  pages[currentPage]['name'] = value;
-                });
-              },
-            ),
-          ),
-        ],
+Padding(
+  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+  child: Column(
+    children: [
+      TextField(
+        decoration: InputDecoration(
+          labelText: 'Nama Page',
+          border: OutlineInputBorder(),
+        ),
+        controller: _pageNameController,
+        onChanged: (value) {
+          setState(() {
+            pages[currentPage]['name'] = value;
+          });
+        },
+      ),
+      const SizedBox(height: 16),
+      TextField(
+        decoration: InputDecoration(
+          labelText: 'Deskripsi',
+          border: OutlineInputBorder(),
+        ),
+        controller: _descriptionController,
+        onChanged: (value) {
+          setState(() {
+            pages[currentPage]['description'] = value;
+          });
+        },
+      ),
+    ],
+  ),
+),
+        ]
       ),
       // Tombol "Tambah" di pojok kanan bawah layar
-      Align(
-        alignment: Alignment.bottomRight,
-        child: Padding(
-          padding: const EdgeInsets.only(right: 16, bottom: 16), // Jarak yang fleksibel
-          child: FloatingActionButton.extended(
-            onPressed: () {
-              setState(() {
-                pages.add({'name': 'Page ${pages.length + 1}'}); // Tambahkan page baru
-                currentPage = pages.length - 1; // Pindah ke page baru
-              });
-            },
-            label: Text('Tambah'),
-            icon: Icon(Icons.add),
-            backgroundColor: Colors.purple,
-          ),
-        ),
-      ),
+Align(
+  alignment: Alignment.bottomCenter,
+  child: Padding(
+    padding: const EdgeInsets.only(bottom: 1), // Jarak yang fleksibel
+    child: FloatingActionButton.extended(
+      onPressed: () {
+        setState(() {
+          pages.add({'name': 'Page ${pages.length + 1}', 'description': ''}); // Tambahkan page baru
+          currentPage = pages.length - 1; // Pindah ke page baru
+          _updatePageNameController();
+          _selectedIsi = 'Pembuka'; // Reset pilihan isi
+          _updateTombolText(_selectedIsi); // Reset teks tombol
+        });
+      },
+      label: Text('Tambah'),
+      icon: Icon(Icons.add),
+      backgroundColor: Colors.purple,
+    ),
+  ),
+),
     ],
   );
     } else if (_selectedIndex == 1) {
@@ -603,7 +632,7 @@ if (_selectedIndex == 0) {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      '${pages[currentPage]['name']}!',
+                      '${pages[currentPage]['name']}',
                       style: TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
@@ -612,7 +641,7 @@ if (_selectedIndex == 0) {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      'Mari mengisi survei ini!',
+                      '${pages[currentPage]['description']}',
                       style: TextStyle(
                         fontSize: 16,
                         color: _textColor, // Warna teks dinamis
