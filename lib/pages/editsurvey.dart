@@ -28,6 +28,7 @@ class _SurveyPageState extends State<SurveyPage> {
   TextEditingController _textColorController = TextEditingController();
   TextEditingController _buttonTextColorController = TextEditingController();
   TextEditingController _transparencyController = TextEditingController();
+  TextEditingController _pageNameController = TextEditingController();
 
   Color _backgroundColor = Colors.white; // Warna latar
   Color _buttonColor = Colors.red; // Warna tombol
@@ -44,6 +45,7 @@ class _SurveyPageState extends State<SurveyPage> {
       _isPopupVisible = true;
       _imageHeightFactor = 0.6; // Gambar mengecil ketika popup muncul
       _popupOffset = 0.0; // Popup muncul dengan animasi slide-up
+       _pageNameController.text = pages[currentPage]['name'] ?? '';
     });
   }
 
@@ -110,6 +112,7 @@ class _SurveyPageState extends State<SurveyPage> {
     _textColorController.text = '#${_textColor.value.toRadixString(16).substring(2).toUpperCase()}';
     _buttonTextColorController.text = '#${_buttonTextColor.value.toRadixString(16).substring(2).toUpperCase()}';
     _transparencyController.text = '50'; // Default transparansi 50%
+    _pageNameController.text = pages[currentPage]['name'] ?? '';
   }
 
   @override
@@ -165,7 +168,7 @@ if (_selectedIndex == 0) {
                 labelText: 'Nama Page',
                 border: OutlineInputBorder(),
               ),
-              controller: TextEditingController(text: pages[currentPage]['name']),
+              controller: _pageNameController,
               onChanged: (value) {
                 setState(() {
                   pages[currentPage]['name'] = value;
