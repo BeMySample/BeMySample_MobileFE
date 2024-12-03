@@ -12,10 +12,20 @@ class SurveyPage extends StatefulWidget {
 }
 
 class _SurveyPageState extends State<SurveyPage> {
-  int currentPage = 0;
- List<Map<String, String>> pages = [
-  {'name': 'Selamat datang!', 'description': 'Mari mengisi survei ini!'}
-  ];
+  int currentPage = 0; // Halaman aktif
+  final TextEditingController _pageTitleController = TextEditingController(); // Controller untuk nama halaman
+  List<Map<String, String>> pages = [
+    {'name': 'Selamat datang!', 'description': 'Mari mengisi survei ini!'},
+  ]; // Daftar halaman
+
+  // Fungsi untuk memperbarui nama halaman di controller
+  void _refreshPageNameController() {
+    if (pages.isNotEmpty && currentPage < pages.length) {
+      _pageTitleController.text = pages[currentPage]['name']!;
+    } else {
+      _pageTitleController.clear(); // Kosongkan jika tidak ada halaman
+    }
+  }
   int _selectedIndex = 0;
   bool _isPopupVisible = false;
   String? _selectedIsi; // Menyimpan nilai yang dipilih
@@ -136,44 +146,193 @@ void _updatePageNameController() {
 if (_selectedIndex == 0) {
   return Stack(
     children: [
-      // Konten utama tetap dengan Column
-      Column(
-        children: [
-          // Header untuk navigasi page
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              IconButton(
-                icon: Icon(Icons.arrow_back),
-                onPressed: currentPage > 0
-                    ? () {
-                        setState(() {
-                          currentPage--;
-                          _updatePageNameController();
-                        });
-                      }
-                    : null,
+      SingleChildScrollView(
+        child: Column(
+          children: [
+            // ReorderableListView
+            SizedBox(
+              height: MediaQuery.of(context).size.height * 0.6, // Batas tinggi
+              child: ReorderableListView.builder(
+                itemCount: pages.length,
+                onReorder: (oldIndex, newIndex) {
+                  setState(() {
+                    if (newIndex > oldIndex) newIndex -= 1;
+                    final item = pages.removeAt(oldIndex);
+                    pages.insert(newIndex, item);
+                  });
+                },
+               itemBuilder: (context, index) {
+  return ListTile(
+    key: ValueKey(index),
+    tileColor: index == currentPage ? Colors.blue.shade50 : null, // Warna untuk halaman aktif
+    title: Text(
+      pages[index]['name']!,
+      style: TextStyle(
+        fontWeight: index == currentPage ? FontWeight.bold : FontWeight.normal,
+        color: index == currentPage ? Colors.blue : null,
+      ),
+    ),
+    subtitle: Text(pages[index]['description'] ?? ''),
+    trailing: IconButton(
+      icon: Icon(Icons.delete, color: Colors.red),
+      onPressed: () {
+        setState(() {
+          pages.removeAt(index);
+          if (currentPage >= pages.length) {
+            currentPage = pages.isEmpty ? 0 : pages.length - 1; // Pastikan currentPage tetap valid
+          }
+        });
+      },
+    ),
+    onTap: () {
+      setState(() {
+        currentPage = index; // Update halaman yang aktif
+        _updatePageNameController(); // Update controller dengan nama halaman baru
+      });
+    },
+  );
+},
               ),
-              Text('Page ${currentPage + 1} / ${pages.length}'),
-              IconButton(
-                icon: Icon(Icons.arrow_forward),
-                onPressed: currentPage < pages.length - 1
-                    ? () {
-                        setState(() {
-                          currentPage++;
-                          _updatePageNameController();
-                        });
-                      }
-                    : null,
-              ),
-            ],
-          ),
-          const SizedBox(height: 16),
-          // Form untuk mengedit nama page
-Padding(
-  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-  child: Column(
+            ),
+
+            const SizedBox(height: 16),
+
+            // Form untuk mengedit nama halaman (tetap ada placeholder jika diperlukan di masa depan)
+          ],
+        ),
+      ),
+
+      // Tombol tambah halaman di pojok kanan bawah
+      Positioned(
+        bottom: 16,
+        right: 16,
+        child: FloatingActionButton.extended(
+          onPressed: () {
+            setState(() {
+              pages.add({
+                'name': 'Page ${pages.length + 1}', // Nama default halaman baru
+                'description': '', // Deskripsi default
+              });
+                  currentPage = pages.length - 1; // Pindah ke halaman baru
+                 _updatePageNameController(); // Perbarui controller
+            });
+          },
+          label: Text('Tambah'),
+          icon: Icon(Icons.add),
+          backgroundColor: Colors.blue,
+        ),
+      ),
+    ],
+  );
+} else if (_selectedIndex == 1) {
+  return Column(
     children: [
+      // Dropdown untuk memilih isi
+      DropdownButtonFormField<String>(
+        value: _selectedIsi,
+        decoration: InputDecoration(
+          labelText: 'Isi',
+          border: OutlineInputBorder(),
+        ),
+        items: [
+          DropdownMenuItem(
+            value: 'Pembuka',
+            child: Row(
+              children: [
+                Icon(Icons.rocket_launch, color: Colors.blue),
+                SizedBox(width: 8),
+                Text('Pembuka'),
+              ],
+            ),
+          ),
+          DropdownMenuItem(
+            value: 'Teks Pendek',
+            child: Row(
+              children: [
+                Icon(Icons.short_text, color: Colors.purple),
+                SizedBox(width: 8),
+                Text('Teks Pendek'),
+              ],
+            ),
+          ),
+          DropdownMenuItem(
+            value: 'Teks Panjang',
+            child: Row(
+              children: [
+                Icon(Icons.notes, color: Colors.purple),
+                SizedBox(width: 8),
+                Text('Teks Panjang'),
+              ],
+            ),
+          ),
+          DropdownMenuItem(
+            value: 'Pilihan Ganda',
+            child: Row(
+              children: [
+                Icon(Icons.radio_button_checked, color: Colors.purple),
+                SizedBox(width: 8),
+                Text('Pilihan Ganda'),
+              ],
+            ),
+          ),
+          DropdownMenuItem(
+            value: 'Dropdown',
+            child: Row(
+              children: [
+                Icon(Icons.arrow_drop_down_circle, color: Colors.purple),
+                SizedBox(width: 8),
+                Text('Dropdown'),
+              ],
+            ),
+          ),
+          DropdownMenuItem(
+            value: 'Waktu',
+            child: Row(
+              children: [
+                Icon(Icons.calendar_today, color: Colors.purple),
+                SizedBox(width: 8),
+                Text('Waktu'),
+              ],
+            ),
+          ),
+          DropdownMenuItem(
+            value: 'Quote',
+            child: Row(
+              children: [
+                Icon(Icons.format_quote, color: Colors.purple),
+                SizedBox(width: 8),
+                Text('Quote'),
+              ],
+            ),
+          ),
+          DropdownMenuItem(
+            value: 'Likert',
+            child: Row(
+              children: [
+                Icon(Icons.star, color: Colors.purple),
+                SizedBox(width: 8),
+                Text('Likert'),
+              ],
+            ),
+          ),
+          DropdownMenuItem(
+            value: 'Penutup',
+            child: Row(
+              children: [
+                Icon(Icons.rocket, color: Colors.blue),
+                SizedBox(width: 8),
+                Text('Penutup'),
+              ],
+            ),
+          ),
+        ],
+        onChanged: (value) {
+          _updateTombolText(value);
+        },
+      ),
+      const SizedBox(height: 16),
+
+      // TextField untuk nama page
       TextField(
         decoration: InputDecoration(
           labelText: 'Nama Page',
@@ -182,11 +341,14 @@ Padding(
         controller: _pageNameController,
         onChanged: (value) {
           setState(() {
-            pages[currentPage]['name'] = value;
+            pages[currentPage]['name'] = value; // Update nama page
           });
         },
       ),
+
       const SizedBox(height: 16),
+
+      // TextField untuk deskripsi
       TextField(
         decoration: InputDecoration(
           labelText: 'Deskripsi',
@@ -195,155 +357,25 @@ Padding(
         controller: _descriptionController,
         onChanged: (value) {
           setState(() {
-            pages[currentPage]['description'] = value;
+            pages[currentPage]['description'] = value; // Update deskripsi
           });
         },
       ),
-    ],
-  ),
-),
-        ]
+
+      const SizedBox(height: 16),
+
+      // TextField untuk tombol
+      TextFormField(
+        key: ValueKey(_tombolText), // Memaksa rebuild jika teks berubah
+        initialValue: _tombolText,
+        readOnly: true,
+        decoration: InputDecoration(
+          labelText: 'Tombol',
+          border: OutlineInputBorder(),
+        ),
       ),
-      // Tombol "Tambah" di pojok kanan bawah layar
-Align(
-  alignment: Alignment.bottomCenter,
-  child: Padding(
-    padding: const EdgeInsets.only(bottom: 1), // Jarak yang fleksibel
-    child: FloatingActionButton.extended(
-      onPressed: () {
-        setState(() {
-          pages.add({'name': 'Page ${pages.length + 1}', 'description': ''}); // Tambahkan page baru
-          currentPage = pages.length - 1; // Pindah ke page baru
-          _updatePageNameController();
-          _selectedIsi = 'Pembuka'; // Reset pilihan isi
-          _updateTombolText(_selectedIsi); // Reset teks tombol
-        });
-      },
-      label: Text('Tambah'),
-      icon: Icon(Icons.add),
-      backgroundColor: Colors.purple,
-    ),
-  ),
-),
     ],
   );
-    } else if (_selectedIndex == 1) {
-      return Column(
-        children: [
-          DropdownButtonFormField<String>(
-            value: _selectedIsi,
-            decoration: InputDecoration(
-              labelText: 'Isi',
-              border: OutlineInputBorder(),
-            ),
-            items: [
-              DropdownMenuItem(
-                value: 'Pembuka',
-                child: Row(
-                  children: [
-                    Icon(Icons.rocket_launch, color: Colors.blue),
-                    SizedBox(width: 8),
-                    Text('Pembuka'),
-                  ],
-                ),
-              ),
-              DropdownMenuItem(
-                value: 'Teks Pendek',
-                child: Row(
-                  children: [
-                    Icon(Icons.short_text, color: Colors.purple),
-                    SizedBox(width: 8),
-                    Text('Teks Pendek'),
-                  ],
-                ),
-              ),
-              DropdownMenuItem(
-                value: 'Teks Panjang',
-                child: Row(
-                  children: [
-                    Icon(Icons.notes, color: Colors.purple),
-                    SizedBox(width: 8),
-                    Text('Teks Panjang'),
-                  ],
-                ),
-              ),
-              DropdownMenuItem(
-                value: 'Pilihan Ganda',
-                child: Row(
-                  children: [
-                    Icon(Icons.radio_button_checked, color: Colors.purple),
-                    SizedBox(width: 8),
-                    Text('Pilihan Ganda'),
-                  ],
-                ),
-              ),
-              DropdownMenuItem(
-                value: 'Dropdown',
-                child: Row(
-                  children: [
-                    Icon(Icons.arrow_drop_down_circle, color: Colors.purple),
-                    SizedBox(width: 8),
-                    Text('Dropdown'),
-                  ],
-                ),
-              ),
-              DropdownMenuItem(
-                value: 'Waktu',
-                child: Row(
-                  children: [
-                    Icon(Icons.calendar_today, color: Colors.purple),
-                    SizedBox(width: 8),
-                    Text('Waktu'),
-                  ],
-                ),
-              ),
-              DropdownMenuItem(
-                value: 'Quote',
-                child: Row(
-                  children: [
-                    Icon(Icons.format_quote, color: Colors.purple),
-                    SizedBox(width: 8),
-                    Text('Quote'),
-                  ],
-                ),
-              ),
-              DropdownMenuItem(
-                value: 'Likert',
-                child: Row(
-                  children: [
-                    Icon(Icons.star, color: Colors.purple),
-                    SizedBox(width: 8),
-                    Text('Likert'),
-                  ],
-                ),
-              ),
-              DropdownMenuItem(
-                value: 'Penutup',
-                child: Row(
-                  children: [
-                    Icon(Icons.rocket, color: Colors.blue),
-                    SizedBox(width: 8),
-                    Text('Penutup'),
-                  ],
-                ),
-              ),
-            ],
-            onChanged: (value) {
-              _updateTombolText(value);
-            },
-          ),
-          const SizedBox(height: 16),
-          TextFormField(
-            key: ValueKey(_tombolText), // Memaksa rebuild jika teks berubah
-            initialValue: _tombolText,
-            readOnly: true,
-            decoration: InputDecoration(
-              labelText: 'Tombol',
-              border: OutlineInputBorder(),
-            ),
-          ),
-        ],
-      );
 } else {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
