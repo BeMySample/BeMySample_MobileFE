@@ -5,6 +5,7 @@ import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/material_symbols.dart'; // Impor package color picker
 import 'package:image_picker/image_picker.dart'; // Impor package image picker
 import 'dart:io'; // Impor package dart:io untuk File
+import 'package:ngoding_project/pages/preview.dart'; // Impor PreviewPage
 
 class SurveyPage extends StatefulWidget {
   @override
@@ -16,7 +17,11 @@ class _SurveyPageState extends State<SurveyPage> {
   final TextEditingController _pageTitleController =
       TextEditingController(); // Controller untuk nama halaman
   List<Map<String, String>> pages = [
-    {'name': 'Selamat datang!', 'description': 'Mari mengisi survei ini!'},
+    {'name': 'Selamat datang!', 'description': 'Mari mengisi survei ini!', 'backgroundColor': '#FFFFFF',
+'backgroundTransparency': '0.5',
+'buttonColor': '#FF5733',
+'textColor': '#000000',
+'buttonTextColor': '#FFFFFF',},
   ]; // Daftar halaman
 
   // Fungsi untuk memperbarui nama halaman di controller
@@ -626,7 +631,14 @@ if (_selectedIndex == 0) {
           IconButton(
             icon: Icon(Icons.play_arrow_outlined, color: Colors.white),
             onPressed: () {
-              // Logika untuk tombol play
+            Navigator.push(
+            context,
+            MaterialPageRoute(
+            builder: (context) => PreviewPage(
+            pages: pages // Kirim data halaman ke PreviewPage
+            ),
+            ),
+            );
             },
           ),
           IconButton(
