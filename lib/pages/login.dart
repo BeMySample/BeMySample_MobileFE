@@ -1,5 +1,9 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
+import 'package:ngoding_project/pages/services/api_service.dart';
+
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -10,7 +14,9 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   bool _isLogin = true;
-  bool _isVerification = false; // Tambahkan variabel ini
+  bool _isVerification = false;
+  final ApiService _apiService = ApiService();
+  final TextEditingController _emailController = TextEditingController();
 
   void _toggleView() {
     setState(() {
@@ -18,11 +24,38 @@ class _LoginPageState extends State<LoginPage> {
     });
   }
 
-  void _showVerificationView() {
-    setState(() {
-      _isVerification = true;
-    });
+  @override
+void dispose() {
+  _emailController.dispose();
+  super.dispose();
+}
+
+void _showVerificationView() {
+  setState(() {
+    _isVerification = true;
+  });
+}
+
+  void _sendOtp() async {
+  final email = _emailController.text;
+
+  if (email.isEmpty) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text("Masukkan email terlebih dahulu")),
+    );
+    return;
   }
+
+  final success = await _apiService.sendOtp(email);
+  if (success) {
+    _showVerificationView(); // Pindah ke halaman verifikasi jika berhasil
+  } else {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text("Gagal mengirim OTP. Silakan coba lagi.")),
+    );
+  }
+}
+
 
   Widget _buildLoginView() {
     return Column(
@@ -51,6 +84,7 @@ class _LoginPageState extends State<LoginPage> {
         SizedBox(height: 16),
         // Input Email
         TextField(
+          controller: _emailController,
           decoration: InputDecoration(
             hintText: 'Email',
             hintStyle: TextStyle(color: Colors.black54),
@@ -208,6 +242,7 @@ class _LoginPageState extends State<LoginPage> {
         SizedBox(height: 40),
         // Input Email
         TextField(
+           controller: _emailController,
           decoration: InputDecoration(
             hintText: 'Email',
             hintStyle: TextStyle(color: Colors.black54),
@@ -274,7 +309,7 @@ class _LoginPageState extends State<LoginPage> {
           child: SizedBox(
             width: double.infinity,
             child: ElevatedButton(
-              onPressed: _showVerificationView, // Perbarui tombol "Daftar" untuk beralih ke tampilan verifikasi
+              onPressed: _sendOtp,
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.blue,
                 shape: RoundedRectangleBorder(
