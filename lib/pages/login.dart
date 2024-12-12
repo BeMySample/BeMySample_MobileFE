@@ -17,6 +17,7 @@ class _LoginPageState extends State<LoginPage> {
   bool _isVerification = false;
   final ApiService _apiService = ApiService();
   final TextEditingController _emailController = TextEditingController();
+  String _enteredEmail = '';
 
   void _toggleView() {
     setState(() {
@@ -50,6 +51,10 @@ void _sendOtp() async {
       );
       return;
     }
+
+    setState(() {
+    _enteredEmail = email; // Simpan email yang dimasukkan pengguna
+    });
 
     showDialog(
       context: context,
@@ -378,7 +383,7 @@ void _sendOtp() async {
       ),
       const SizedBox(height: 4),
       Text(
-        'eky***@gmail.com',
+        _enteredEmail.isNotEmpty ? _enteredEmail : 'Email tidak ditemukan',
         textAlign: TextAlign.center,
         style: TextStyle(
           color: Colors.black87,
