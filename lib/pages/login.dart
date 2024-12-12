@@ -36,26 +36,39 @@ void _showVerificationView() {
   });
 }
 
-  void _sendOtp() async {
-  final email = _emailController.text;
-
-  if (email.isEmpty) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text("Masukkan email terlebih dahulu")),
-    );
-    return;
+bool _isValidEmail(String email) {
+    final regex = RegExp(r'^[^@]+@[^@]+\.[^@]+');
+    return regex.hasMatch(email);
   }
 
-  final success = await _apiService.sendOtp(email);
-  if (success) {
-    _showVerificationView(); // Pindah ke halaman verifikasi jika berhasil
-  } else {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text("Gagal mengirim OTP. Silakan coba lagi.")),
-    );
-  }
-}
+void _sendOtp() async {
+    final email = _emailController.text;
 
+    if (email.isEmpty || !_isValidEmail(email)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Masukkan email yang valid")),
+      );
+      return;
+    }
+
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => const Center(child: CircularProgressIndicator()),
+    );
+
+    final success = await _apiService.sendOtp(email);
+
+    Navigator.of(context).pop();
+
+    if (success) {
+      _showVerificationView(); 
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Gagal mengirim OTP. Silakan coba lagi.")),
+      );
+    }
+  }
 
   Widget _buildLoginView() {
     return Column(
@@ -342,7 +355,6 @@ void _showVerificationView() {
           height: 280,
         ),
       ),
-      // Jarak sangat kecil antara logo dan judul
       const SizedBox(height: 4),
       // Judul
       Text(
