@@ -4,6 +4,7 @@ import 'package:ngoding_project/pages/splash.dart';
 import 'package:ngoding_project/pages/home.dart';
 import 'package:ngoding_project/pages/editsurvey.dart';
 import 'package:ngoding_project/pages/preview.dart'; // Tambahkan import untuk PreviewPage
+import 'package:ngoding_project/pages/verification.dart'; // Tambahkan import untuk VerificationPage
 
 void main() {
   runApp(const MyApp());
@@ -26,6 +27,7 @@ class MyApp extends StatelessWidget {
         '/home': (context) => const HomePage(), // Route ke HomePage
         '/editsurvey': (context) => SurveyPage(), // Route ke SurveyPage
         '/preview': (context) => PreviewPage(pages: []), // Route ke PreviewPage (baru ditambahkan)
+         '/verification': (context) => VerificationPage(), // Route ke VerificationPage
       },
       builder: (context, child) {
         // Override text scale to 1.0

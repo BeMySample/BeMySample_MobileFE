@@ -425,7 +425,7 @@ void _sendOtp() async {
         width: double.infinity,
         child: ElevatedButton(
           onPressed: () {
-            // Aksi tombol Lanjutkan
+            Navigator.pushReplacementNamed(context, '/verification');
           },
           style: ElevatedButton.styleFrom(
             backgroundColor: Colors.blue,
