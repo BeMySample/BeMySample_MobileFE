@@ -294,132 +294,103 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-    Widget _buildVerificationView() {
-    return SingleChildScrollView(
-      child: Container(
-        padding: const EdgeInsets.all(24.0),
-        margin: const EdgeInsets.symmetric(horizontal: 16.0),
-        decoration: BoxDecoration(
-          color: Colors.white.withOpacity(0.8),
-          borderRadius: BorderRadius.circular(16),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            // Logo
-            Center(
-              child: Image.network(
-                "https://via.placeholder.com/184x56",
-                width: 184,
-                height: 56,
-                fit: BoxFit.fill,
-              ),
-            ),
-            const SizedBox(height: 40),
-            // Judul
-            Text(
-              'Verifikasi Akun',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Color(0xFF1F38DB),
-                fontSize: 32,
-                fontFamily: 'Gill Sans MT',
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-            const SizedBox(height: 2),
-            // Deskripsi
-            Container(
-              padding: const EdgeInsets.all(2),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text.rich(
-                    TextSpan(
-                      children: [
-                        TextSpan(
-                          text: 'Periksa surel masuk pada surel ',
-                          style: TextStyle(
-                            color: Color(0xFF333333),
-                            fontSize: 16,
-                            fontFamily: 'Inter',
-                            fontWeight: FontWeight.w400,
-                          ),
-                        ),
-                        TextSpan(
-                          text: 'eky***@gmail.com',
-                          style: TextStyle(
-                            color: Color(0xFF333333),
-                            fontSize: 16,
-                            fontFamily: 'Inter',
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 50),
-            // Spacer
-            Container(
-              padding: const EdgeInsets.all(10),
-              clipBehavior: Clip.antiAlias,
-              decoration: BoxDecoration(),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(width: 10),
-                  const SizedBox(width: 10),
-                  const SizedBox(width: 10),
-                ],
-              ),
-            ),
-            const SizedBox(height: 50),
-            // Tombol Lanjutkan
-            Opacity(
-              opacity: 0.25,
-              child: Container(
-                width: double.infinity,
-                height: 64,
-                padding: const EdgeInsets.only(top: 18, bottom: 19),
-                clipBehavior: Clip.antiAlias,
-                decoration: ShapeDecoration(
-                  color: Color(0xFF111111),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(40),
-                  ),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      'Lanjutkan',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 22,
-                        fontFamily: 'Inter',
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
+ Widget _buildVerificationView() {
+  return Column(
+    mainAxisSize: MainAxisSize.min,
+    crossAxisAlignment: CrossAxisAlignment.stretch,
+    children: [
+      // Logo
+      Center(
+        child: Image.asset(
+          'lib/assets/images/BeMySamplePNG.png',
+          width: 280,
+          height: 280,
         ),
       ),
-    );
-  }
+      // Jarak sangat kecil antara logo dan judul
+      const SizedBox(height: 4),
+      // Judul
+      Text(
+        'Verifikasi Akun',
+        textAlign: TextAlign.center,
+        style: TextStyle(
+          color: Colors.black87,
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+      const SizedBox(height: 12),
+      // Deskripsi
+      Text(
+        'Periksa surel masuk pada surel',
+        textAlign: TextAlign.center,
+        style: TextStyle(
+          color: Colors.black54,
+          fontSize: 14,
+        ),
+      ),
+      const SizedBox(height: 4),
+      Text(
+        'eky***@gmail.com',
+        textAlign: TextAlign.center,
+        style: TextStyle(
+          color: Colors.black87,
+          fontSize: 14,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+      const SizedBox(height: 32),
+      // TextBox untuk Kode OTP (6 Digit)
+      Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: List.generate(
+          6,
+          (index) => Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 5.0), // Sesuaikan jarak antar kotak
+            child: SizedBox(
+              width: 40,
+              child: TextField(
+                textAlign: TextAlign.center,
+                maxLength: 1,
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(
+                  counterText: "",
+                  filled: true,
+                  fillColor: Colors.white.withOpacity(0.5),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide.none,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+      const SizedBox(height: 24),
+      // Tombol Lanjutkan
+      SizedBox(
+        width: double.infinity,
+        child: ElevatedButton(
+          onPressed: () {
+            // Aksi tombol Lanjutkan
+          },
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.blue,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+          ),
+          child: const Text(
+            'Lanjutkan',
+            style: TextStyle(color: Colors.white),
+          ),
+        ),
+      ),
+    ],
+  );
+}
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
