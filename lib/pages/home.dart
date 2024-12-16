@@ -3,6 +3,7 @@ import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/material_symbols.dart';
 import 'package:iconify_flutter/icons/mdi.dart';
 import 'package:ngoding_project/pages/profile.dart';
+import 'package:ngoding_project/pages/result.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -144,22 +145,30 @@ Padding(
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 12),
-            _buildSurveyCard(
-                "Preferensi Digitalisasi Pemilihan Umum",
-                "190 responden",
-                "Terpakai 38.000 dari 190.000",
-                Colors.blue,
-                "DIBUKA"),
+      _buildSurveyCard(
+  context,
+  "Preferensi Digitalisasi Pemilihan Umum",
+  "190 responden",
+  "Terpakai 38.000 dari 190.000",
+  Colors.blue,
+  "DIBUKA",
+),
             const SizedBox(height: 8),
             _buildSurveyCard(
+              context,
                 "Strategi Menabung Efektif bagi Sandwich Generation",
                 "20 responden",
                 "Terpakai 200 dari 200",
                 Colors.red,
                 "TERHENTI"),
             const SizedBox(height: 8),
-            _buildSurveyCard("Apakah Anda Siap Beralih ke Mobil Listrik?",
-                "190 responden", "Belum Teralokasikan", Colors.grey, "DRAFT"),
+            _buildSurveyCard(
+              context,
+              "Apakah Anda Siap Beralih ke Mobil Listrik?",
+                "190 responden", 
+                "Belum Teralokasikan", 
+                Colors.grey, "DRAFT"
+                ),
             const SizedBox(height: 24),
 
             // Bagian "Berkontribusi"
@@ -212,9 +221,18 @@ Padding(
     );
   }
 
-  Widget _buildSurveyCard(String title, String responses, String status,
+  Widget _buildSurveyCard(BuildContext context, String title, String responses, String status,
       Color color, String label) {
-    return Card(
+          return InkWell(
+    onTap: () {
+      if (label == "DIBUKA") {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const ResultPage()),
+        );
+      }
+    },
+    child: Card(
       child: Row(
         children: [
           Container(
@@ -299,18 +317,19 @@ Padding(
                               style:
                                   TextStyle(color: Colors.red, fontSize: 12)),
                         ],
-                      ),
-                    ],
-                  ),
-                ],
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-          IconButton(
-            icon: Icon(Icons.more_vert),
-            onPressed: () {},
-          ),
-        ],
+            IconButton(
+              icon: Icon(Icons.more_vert),
+              onPressed: () {},
+            ),
+          ],
+        ),
       ),
     );
   }
