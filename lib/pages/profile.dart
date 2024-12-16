@@ -13,6 +13,16 @@ class _ProfilePageState extends State<ProfilePage> {
   bool _newsletterActive = true;
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
+  final UserData= {
+    'name': 'Rezky Santika',
+    'email': 'ekytika@gmail.com',
+    'gender': 'Perempuan',
+    'birthdate': '21 Maret 2004',
+    'city': 'Surabaya',
+    'job': 'Mahasiswa',
+    'institution': 'Institut Teknologi Sepuluh Nopember',
+    'hobbies': 'Membaca, Traveling, Kerajinan, Musik, Film, Fotografi',
+    };
 
 Future<void> _showEditDialog(String title, String hint, TextEditingController controller) {
   return showDialog<void>(
@@ -130,16 +140,16 @@ Future<void> _showEditDialog(String title, String hint, TextEditingController co
             const SizedBox(height: 16),
 
             // Nama dan Email
-            const Text(
-              'Rezky Santika',
+            Text(
+              UserData['name'] ?? 'Unknown',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 4),
-            const Row(
+            Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  'ekytika@gmail.com',
+                  UserData['email'] ?? 'Unknown',
                   style: TextStyle(color: Color.fromARGB(255, 105, 105, 105)),
                 ),
                 SizedBox(width: 4),
@@ -200,14 +210,12 @@ Future<void> _showEditDialog(String title, String hint, TextEditingController co
             // Bagian Tentang Anda
             _buildSectionTitle('Tentang Anda'),
             _buildSectionBox([
-              _buildIconListTile(Icons.person, 'Gender', 'Perempuan'),
-              _buildIconListTile(Icons.cake, 'Tanggal Lahir', '21 Maret 2004'),
-              _buildIconListTile(Icons.location_on, 'Kota Tinggal', 'Surabaya'),
-              _buildIconListTile(Icons.work, 'Pekerjaan', 'Mahasiswa'),
-              _buildIconListTile(Icons.school, 'Institusi',
-                  'Institut Teknologi Sepuluh Nopember'),
-              _buildIconListTile(Icons.sports_esports, 'Hobi',
-                  'Membaca, Traveling, Kerajinan, Musik, Film, Fotografi'),
+         _buildIconListTile(Icons.person, 'Gender', UserData['gender'] ?? ''),
+          _buildIconListTile(Icons.cake, 'Tanggal Lahir', UserData['birthdate'] ?? ''),
+          _buildIconListTile(Icons.location_on, 'Kota Tinggal', UserData['city'] ?? ''),
+          _buildIconListTile(Icons.work, 'Pekerjaan', UserData['job'] ?? ''),
+          _buildIconListTile(Icons.school, 'Institusi', UserData['institution'] ?? ''),
+          _buildIconListTile(Icons.sports_esports, 'Hobi', UserData['hobbies'] ?? ''),
             ]),
 
             const SizedBox(height: 16),
