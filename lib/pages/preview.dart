@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:ngoding_project/pages/editsurvey.dart';
+import 'dart:io';
 
 class PreviewPage extends StatefulWidget {
   final List<Map<String, dynamic>> pages;
 
-  PreviewPage({required this.pages});
+  const PreviewPage({super.key, required this.pages});
 
   @override
   _PreviewPageState createState() => _PreviewPageState();
@@ -15,9 +17,7 @@ class _PreviewPageState extends State<PreviewPage> {
   // Fungsi untuk mengonversi hex ke Color
   Color hexToColor(String hex) {
     hex = hex.replaceAll('#', '');
-    if (hex.length == 6) {
-      hex = 'FF$hex'; // Tambahkan alpha jika tidak ada
-    }
+    if (hex.length == 6) hex = 'FF$hex';
     return Color(int.parse(hex, radix: 16));
   }
 
@@ -30,14 +30,18 @@ class _PreviewPageState extends State<PreviewPage> {
         ? hexToColor(page['backgroundColor'])
         : Colors.white;
 
-    // Konversi backgroundTransparency menjadi double jika berupa string
-    final backgroundTransparency = page['backgroundTransparency'] is String
+    final backgroundTransparency = page['backgroundTransparency'] != null
         ? double.tryParse(page['backgroundTransparency']) ?? 1.0
-        : (page['backgroundTransparency'] ?? 1.0);
+        : 1.0;
+
+    final backgroundImage = (page['backgroundImage'] != null &&
+            File(page['backgroundImage']).existsSync())
+        ? FileImage(File(page['backgroundImage']))
+        : const AssetImage('lib/assets/images/Perkuliahan.png');
 
     final buttonColor = page['buttonColor'] != null
         ? hexToColor(page['buttonColor'])
-        : Colors.blue;
+        : Colors.red;
 
     final textColor = page['textColor'] != null
         ? hexToColor(page['textColor'])
@@ -48,43 +52,33 @@ class _PreviewPageState extends State<PreviewPage> {
         : Colors.white;
 
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        flexibleSpace: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [Color(0xFF2073DB), Color(0xFF1F38DB)],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-          ),
-        ),
-        title: Text('Pratinjau'),
-        centerTitle: true,
-      ),
-      body: Stack(
-        children: [
-          // Gambar latar belakang
-          if (page['backgroundImage'] != null)
-            Container(
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage(page['backgroundImage']),
-                  fit: BoxFit.cover,
+      body: SafeArea(
+        child: Stack(
+          children: [
+            // Background Image
+            Center(
+              child: Container(
+                margin: const EdgeInsets.all(16.0),
+                height: MediaQuery.of(context).size.height * 0.75,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(16),
+                  image: DecorationImage(
+                    image: backgroundImage as ImageProvider,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(16),
+                    color: backgroundColor.withOpacity(backgroundTransparency),
+                  ),
                 ),
               ),
             ),
-          // Warna latar belakang transparan
-          Container(
-            color: backgroundColor.withOpacity(backgroundTransparency),
-          ),
-          // Konten halaman
-          Center(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
+            // Konten Utama Halaman
+            Center(
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
                     page['name'] ?? '',
@@ -95,55 +89,113 @@ class _PreviewPageState extends State<PreviewPage> {
                     ),
                     textAlign: TextAlign.center,
                   ),
-                  SizedBox(height: 8),
+                  const SizedBox(height: 8),
                   Text(
                     page['description'] ?? '',
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: textColor,
-                    ),
+                    style: TextStyle(fontSize: 16, color: textColor),
                     textAlign: TextAlign.center,
                   ),
-                  SizedBox(height: 24),
-                  ElevatedButton(
+                  const SizedBox(height: 24),
+                  ElevatedButton.icon(
                     onPressed: () {},
                     style: ElevatedButton.styleFrom(
                       backgroundColor: buttonColor,
                       foregroundColor: buttonTextColor,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 24, vertical: 12),
                     ),
-                    child: Text('Mulai'),
-                  ),
-                  SizedBox(height: 24),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      IconButton(
-                        icon: Icon(Icons.arrow_upward, size: 36, color: Colors.blue),
-                        onPressed: currentPage > 0
-                            ? () {
-                                setState(() {
-                                  currentPage--;
-                                });
-                              }
-                            : null,
-                      ),
-                      IconButton(
-                        icon: Icon(Icons.arrow_downward, size: 36, color: Colors.blue),
-                        onPressed: currentPage < widget.pages.length - 1
-                            ? () {
-                                setState(() {
-                                  currentPage++;
-                                });
-                              }
-                            : null,
-                      ),
-                    ],
+                    icon: const Icon(Icons.play_arrow),
+                    label: const Text('Mulai'),
                   ),
                 ],
               ),
             ),
+            // Tombol Navigasi di Kanan Bawah
+    Positioned(
+  bottom: 16,
+  right: 16,
+  child: Row(
+    mainAxisAlignment: MainAxisAlignment.end,
+    children: [
+      if (currentPage > 0)
+        Container(
+          margin: const EdgeInsets.only(right: 8),
+          decoration: BoxDecoration(
+            color: Colors.red,
+            borderRadius: BorderRadius.circular(8),
           ),
-        ],
+          child: IconButton(
+            icon: const Icon(Icons.arrow_back, color: Colors.white),
+            onPressed: () {
+              setState(() {
+                currentPage--;
+              });
+            },
+          ),
+        ),
+      if (currentPage < widget.pages.length - 1)
+        Container(
+          decoration: BoxDecoration(
+            color: Colors.red,
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: IconButton(
+            icon: const Icon(Icons.arrow_forward, color: Colors.white),
+            onPressed: () {
+              setState(() {
+                currentPage++;
+              });
+            },
+          ),
+        ),
+    ],
+  ),
+),
+            // Tombol Publikasikan
+            Positioned(
+              top: 16,
+              left: 16,
+              child: ElevatedButton.icon(
+                onPressed: () {},
+                icon: const Icon(Icons.cloud_upload_outlined, size: 18),
+                label: const Text('Publikasikan'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.blue,
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 12, vertical: 8),
+                ),
+              ),
+            ),
+            // Tombol X (Kembali ke EditSurvey)
+            Positioned(
+              top: 16,
+              right: 16,
+              child: IconButton(
+                icon: const Icon(Icons.close, size: 24, color: Colors.black54),
+                onPressed: () {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => SurveyPage()),
+                  );
+                },
+              ),
+            ),
+            // Teks Bawah
+            Positioned(
+              bottom: 16,
+              left: 16,
+              child: Text(
+                'Pertanyaan wajib diisi',
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Colors.grey[700],
+                  fontStyle: FontStyle.italic,
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

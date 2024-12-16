@@ -119,14 +119,15 @@ class _SurveyPageState extends State<SurveyPage> {
     );
   }
 
-  Future<void> _pickImage() async {
-    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
-      setState(() {
-        _backgroundImage = File(pickedFile.path);
-      });
-    }
+Future<void> _pickImage() async {
+  final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+  if (pickedFile != null) {
+    setState(() {
+      _backgroundImage = File(pickedFile.path);
+      pages[currentPage]['backgroundImage'] = pickedFile.path; // Tambahkan path ke pages
+    });
   }
+}
 
   @override
   void initState() {
@@ -202,6 +203,11 @@ if (_selectedIndex == 0) {
                     pages.add({
                       'name': 'Page ${pages.length + 1}',
                       'description': '',
+                       'backgroundColor': '#FFFFFF',
+                        'backgroundTransparency': '0.5',
+                        'buttonColor': '#FF5733',
+                        'textColor': '#000000',
+                        'buttonTextColor': '#FFFFFF',
                     });
                   });
                 },
