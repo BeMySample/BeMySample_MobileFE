@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/material_symbols.dart';
 import 'package:iconify_flutter/icons/mdi.dart';
+import 'package:ngoding_project/pages/profile.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -15,8 +16,8 @@ class HomePage extends StatelessWidget {
         title: Row(
           children: [
             Image.asset(
-              'lib/assets/icons/BeMySampleIcon.png', // Path ke logo
-              width: 32, // Sesuaikan ukuran logo
+              'lib/assets/icons/BeMySampleIcon.png',
+              width: 32, 
               height: 32,
             ),
             const SizedBox(width: 8),
@@ -35,7 +36,7 @@ class HomePage extends StatelessWidget {
           Row(
             children: [
               Image.asset(
-                'lib/assets/icons/akarcoins.png', // Path ke ikon koin
+                'lib/assets/icons/akarcoins.png',
                 width: 18,
                 height: 18,
               ),
@@ -49,18 +50,25 @@ class HomePage extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 8), // Jarak antara koin dan ikon profil
-              Padding(
-                padding:
-                    const EdgeInsets.only(right: 16.0), // Jarak kanan dari tepi
-                child: ClipOval(
-                  child: Image.asset(
-                    'lib/assets/images/FotoEky.png', // Path ke foto profil
-                    width: 32, // Sesuaikan ukuran ikon profil
-                    height: 32,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ),
+Padding(
+  padding: const EdgeInsets.only(right: 16.0),
+  child: GestureDetector(
+    onTap: () {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => ProfilePage()),
+      );
+    },
+    child: ClipOval(
+      child: Image.asset(
+        'lib/assets/images/FotoEky.png', // Path ke foto profil
+        width: 32, // Ukuran ikon profil
+        height: 32,
+        fit: BoxFit.cover,
+      ),
+    ),
+  ),
+),
             ],
           ),
         ],

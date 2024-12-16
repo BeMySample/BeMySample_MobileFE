@@ -5,6 +5,7 @@ import 'package:ngoding_project/pages/home.dart';
 import 'package:ngoding_project/pages/editsurvey.dart';
 import 'package:ngoding_project/pages/preview.dart';
 import 'package:ngoding_project/pages/verification.dart';
+import 'package:ngoding_project/pages/profile.dart';
 
 void main() {
   runApp(const MyApp());
@@ -28,6 +29,7 @@ class MyApp extends StatelessWidget {
         '/editsurvey': (context) => SurveyPage(), // Route ke SurveyPage
         '/preview': (context) => PreviewPage(pages: []), // Route ke PreviewPage
          '/verification': (context) => VerificationPage(), // Route ke VerificationPage
+         '/profile': (context) => ProfilePage(), // Route ke ProfilePage
       },
       builder: (context, child) {
         // Override text scale to 1.0
