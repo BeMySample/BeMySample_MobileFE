@@ -7,7 +7,9 @@ import 'package:ngoding_project/pages/preview.dart'; // Tambahkan import untuk P
 import 'package:ngoding_project/pages/verification.dart'; // Tambahkan import untuk VerificationPage
 
 void main() {
-  runApp(const MyApp());
+  runApp(MaterialApp(
+    home: VerificationPage(),
+  ));
 }
 
 class MyApp extends StatelessWidget {

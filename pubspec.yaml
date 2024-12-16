@@ -80,6 +80,7 @@ flutter:
      - lib/assets/icons/staricon.png
      - lib/assets/images/BeMySample.gif
      - lib/assets/icons/BeMySampleHeader.png
+     - lib/assets/images/BeMySampleGirl.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
