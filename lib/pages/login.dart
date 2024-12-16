@@ -1,8 +1,7 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:ngoding_project/pages/services/api_service.dart';
+import 'package:ngoding_project/pages/home.dart';
 
 
 class LoginPage extends StatefulWidget {
@@ -76,7 +75,8 @@ void _sendOtp() async {
   }
 
   Widget _buildLoginView() {
-    return Column(
+  return SingleChildScrollView(
+    child: Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -88,9 +88,9 @@ void _sendOtp() async {
             height: 280,
           ),
         ),
-        SizedBox(height: 15),
+        const SizedBox(height: 15),
         // Judul
-        Text(
+        const Text(
           'Selamat datang kembali!',
           textAlign: TextAlign.center,
           style: TextStyle(
@@ -99,13 +99,13 @@ void _sendOtp() async {
             fontWeight: FontWeight.bold,
           ),
         ),
-        SizedBox(height: 16),
+        const SizedBox(height: 16),
         // Input Email
         TextField(
           controller: _emailController,
           decoration: InputDecoration(
             hintText: 'Email',
-            hintStyle: TextStyle(color: Colors.black54),
+            hintStyle: const TextStyle(color: Colors.black54),
             filled: true,
             fillColor: Colors.white.withOpacity(0.5),
             border: OutlineInputBorder(
@@ -113,15 +113,15 @@ void _sendOtp() async {
               borderSide: BorderSide.none,
             ),
           ),
-          style: TextStyle(color: Colors.black),
+          style: const TextStyle(color: Colors.black),
         ),
-        SizedBox(height: 16),
+        const SizedBox(height: 16),
         // Input Password
         TextField(
           obscureText: true, // Agar password tersembunyi
           decoration: InputDecoration(
             hintText: 'Password',
-            hintStyle: TextStyle(color: Colors.black54),
+            hintStyle: const TextStyle(color: Colors.black54),
             filled: true,
             fillColor: Colors.white.withOpacity(0.5),
             border: OutlineInputBorder(
@@ -129,15 +129,19 @@ void _sendOtp() async {
               borderSide: BorderSide.none,
             ),
           ),
-          style: TextStyle(color: Colors.black),
+          style: const TextStyle(color: Colors.black),
         ),
-        SizedBox(height: 16),
+        const SizedBox(height: 16),
         // Tombol Masuk
         SizedBox(
           width: double.infinity,
           child: ElevatedButton(
             onPressed: () {
-              Navigator.pushReplacementNamed(context, '/home');
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (context) => const HomePage()),
+                (Route<dynamic> route) => false, // Menghapus semua halaman sebelumnya
+              );
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.blue,
@@ -151,12 +155,12 @@ void _sendOtp() async {
             ),
           ),
         ),
-        SizedBox(height: 16),
+        const SizedBox(height: 16),
         // Divider teks "atau"
-        Center(
+        const Center(
           child: Text('atau', style: TextStyle(color: Colors.black)),
         ),
-        SizedBox(height: 16),
+        const SizedBox(height: 16),
         // Tombol Login dengan Google
         SocialButton(
           imagePath: 'lib/assets/icons/googlelogo.png',
@@ -166,17 +170,17 @@ void _sendOtp() async {
             // Aksi saat tombol ditekan
           },
         ),
-        SizedBox(height: 8),
+        const SizedBox(height: 8),
         // Teks Daftar dan Lupa Kata Sandi
         Center(
           child: RichText(
             text: TextSpan(
               text: "Belum punya akun? ",
-              style: TextStyle(color: Colors.black54),
+              style: const TextStyle(color: Colors.black54),
               children: [
                 TextSpan(
                   text: 'Daftar gratis Sekarang',
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.blue,
                     fontWeight: FontWeight.bold,
                     decoration: TextDecoration.underline,
@@ -187,16 +191,17 @@ void _sendOtp() async {
             ),
           ),
         ),
-        SizedBox(height: 8),
-        Center(
+        const SizedBox(height: 8),
+        const Center(
           child: Text(
             'Lupa kata sandi',
             style: TextStyle(color: Colors.blue),
           ),
         ),
       ],
-    );
-  }
+    ),
+  );
+}
 
   Widget _buildRegisterView() {
     return Column(
@@ -446,6 +451,7 @@ void _sendOtp() async {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: true, 
       body: Stack(
         children: [
           // Background Image
