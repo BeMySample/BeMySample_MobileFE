@@ -12,7 +12,7 @@ class ApiService {
         'Content-Type': 'application/json',
       },
       body: jsonEncode({
-        'email': email, // Parameter yang sesuai dengan backend
+        'email': email,
       }),
     );
 

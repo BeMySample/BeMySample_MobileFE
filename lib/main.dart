@@ -3,13 +3,11 @@ import 'package:ngoding_project/pages/login.dart';
 import 'package:ngoding_project/pages/splash.dart';
 import 'package:ngoding_project/pages/home.dart';
 import 'package:ngoding_project/pages/editsurvey.dart';
-import 'package:ngoding_project/pages/preview.dart'; // Tambahkan import untuk PreviewPage
-import 'package:ngoding_project/pages/verification.dart'; // Tambahkan import untuk VerificationPage
+import 'package:ngoding_project/pages/preview.dart';
+import 'package:ngoding_project/pages/verification.dart';
 
 void main() {
-  runApp(MaterialApp(
-    home: VerificationPage(),
-  ));
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -22,13 +20,13 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      initialRoute: '/', // Awal aplikasi buka SplashScreen
+      initialRoute: '/', 
       routes: {
         '/': (context) => SplashScreen(), // Route ke SplashScreen
         '/login': (context) => LoginPage(), // Route ke LoginPage
         '/home': (context) => const HomePage(), // Route ke HomePage
         '/editsurvey': (context) => SurveyPage(), // Route ke SurveyPage
-        '/preview': (context) => PreviewPage(pages: []), // Route ke PreviewPage (baru ditambahkan)
+        '/preview': (context) => PreviewPage(pages: []), // Route ke PreviewPage
          '/verification': (context) => VerificationPage(), // Route ke VerificationPage
       },
       builder: (context, child) {

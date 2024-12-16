@@ -445,19 +445,17 @@ class _PageFour extends StatelessWidget {
         Expanded(
           child: Container(
         width: double.infinity,
-  height: MediaQuery.of(context).size.height * 0.6, // Tinggi gambar (60% layar)
   child: Transform.scale(
-    scale: 1.2, // Nilai skala untuk zoom gambar
+    scale: 1.35, 
     child: Image.asset(
       'lib/assets/images/BeMySampleGirl.png', // Path gambar
-      fit: BoxFit.cover, // Tetap cover untuk menjaga proporsi
     ),
   ),   
           ),
         ),
         // Kontainer putih untuk teks
         Container(
-          height: MediaQuery.of(context).size.height * 0.3,
+          height: MediaQuery.of(context).size.height * 0.31,
           padding: const EdgeInsets.all(24.0),
           width: double.infinity,
           decoration: BoxDecoration(
@@ -502,7 +500,7 @@ class _PageFour extends StatelessWidget {
                 height: 40,
                 child: ElevatedButton(
                   onPressed: () {
-                    // Aksi ketika tombol ditekan
+                     Navigator.pushReplacementNamed(context, '/home');
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Color(0xFF1F38DB),
