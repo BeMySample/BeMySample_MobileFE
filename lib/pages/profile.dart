@@ -14,14 +14,14 @@ class _ProfilePageState extends State<ProfilePage> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final UserData= {
-    'name': 'Rezky Santika',
-    'email': 'ekytika@gmail.com',
-    'gender': 'Perempuan',
-    'birthdate': '21 Maret 2004',
+    'name': 'Defender Widi',
+    'email': 'defenderwidi17@gmail.com',
+    'gender': 'Pria',
+    'birthdate': '11 Mei 2004',
     'city': 'Surabaya',
     'job': 'Mahasiswa',
     'institution': 'Institut Teknologi Sepuluh Nopember',
-    'hobbies': 'Membaca, Traveling, Kerajinan, Musik, Film, Fotografi',
+    'hobbies': 'Traveling, Musik, Film, Fotografi, Otomotif',
     };
 
 Future<void> _showEditDialog(String title, String hint, TextEditingController controller) {
@@ -123,7 +123,7 @@ Future<void> _showEditDialog(String title, String hint, TextEditingController co
                   const CircleAvatar(
                     radius: 60,
                     backgroundImage:
-                        AssetImage('lib/assets/images/FotoEky.png'),
+                        AssetImage('lib/assets/images/noprofile.jpg'),
                   ),
                   Positioned(
                     bottom: 0,
@@ -224,11 +224,11 @@ Future<void> _showEditDialog(String title, String hint, TextEditingController co
             _buildSectionTitle('Keamanan'),
             _buildSectionBox([
               _buildIconListTile(Icons.lock, 'Kata Sandi',
-                  'Terakhir diubah 1 Mei 2023'),
+                  'Terakhir diubah 17 Desember 2024'),
               _buildIconListTile(
                   Icons.security, 'Autentikasi', 'OTP'),
               _buildIconListTile(Icons.devices, 'Perangkat',
-                  'Google Chrome di Windows\nGoogle Pixel 9XL'),
+                  'Google Chrome di Windows'),
             ]),
 
             const SizedBox(height: 16),

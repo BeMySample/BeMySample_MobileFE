@@ -62,7 +62,7 @@ Padding(
     },
     child: ClipOval(
       child: Image.asset(
-        'lib/assets/images/FotoEky.png', // Path ke foto profil
+        'lib/assets/images/noprofile.jpg', // Path ke foto profil
         width: 32, // Ukuran ikon profil
         height: 32,
         fit: BoxFit.cover,

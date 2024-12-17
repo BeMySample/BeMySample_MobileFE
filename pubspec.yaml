@@ -92,6 +92,7 @@ flutter:
      - lib/assets/icons/BeMySampleHeader.png
      - lib/assets/images/BeMySampleGirl.png
      - lib/assets/images/pemilihanumum.jpg
+     - lib/assets/images/noprofile.jpg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
